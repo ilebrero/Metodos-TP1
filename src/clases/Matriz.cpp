@@ -1,5 +1,9 @@
 #include <vector>
 #include <assert.h>
+#include <cstdlib>
+#include <time.h>
+#include <iostream>
+
 
 //h :D
 
@@ -15,7 +19,6 @@ private:
 			}	
 		}
 	}
-
 public:
 	int filas, columnas;
 	vector< vector<float> > matriz;
@@ -93,5 +96,25 @@ public:
 
 	vector<float>& operator [] (const int fila) {
         return this->matriz[fila];
+    }
+
+    void randomizar(const int semilla) {
+		srand( semilla );
+
+		for (int f = 0; f < filas; ++f) {
+			for (int c = 0; c < columnas; ++c) {
+				matriz[f][c] = rand() % 1000 + 1;
+			}	
+		}	
+    }
+
+    void mostrar() {
+    	for (int f = 0; f < filas; ++f) {
+			for (int c = 0; c < columnas; ++c) {
+				cout << matriz[f][c] << " ";
+			}
+
+			cout << endl;
+		}
     }
 };
