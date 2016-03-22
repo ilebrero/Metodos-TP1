@@ -23,11 +23,11 @@ public:
 		filas    = 5;
 		columnas = 5;
 		vector< vector<float> > fila(5, vector<float>(5));
-		matriz = asd;
+		matriz = fila;
 
 		for (int i = 0; i < 5; ++i) {
 			vector<float> columna(5);
-			matriz[i] = nuevo;
+			matriz[i] = columna;
 			
 		}
 	}
