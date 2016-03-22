@@ -19,43 +19,41 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int fileT
   iss >> cantEquipos;
   iss >> cantPartidos;
   Matriz C(cantEquipos, cantEquipos);
-  vector<int> w(0, cantEquipos); // Cada posición tiene el numero de partidos ganados por el equipo i
-  vector<int> l(0, cantEquipos); // Cada posición tiene el numero de partidos perdidos por el equipo i
-  vector<float> b(0, cantEquipos); // Vector del sistema Cr = b
-  vector<float> r(0, cantEquipos); // Solución del sistema Cr = b
+  vector<int> w(cantEquipos, 0); // Cada posición tiene el numero de partidos ganados por el equipo i
+  vector<int> l(cantEquipos, 0); // Cada posición tiene el numero de partidos perdidos por el equipo i
+  vector<float> b(cantEquipos, 0); // Vector del sistema Cr = b
+  vector<float> r(cantEquipos, 0); // Solución del sistema Cr = b
 
   while (getline (fileData, line)) {
 
     std::istringstream iss(line);
 
-    for (int i = 0 ; i < cantEquipos ; ++i) {
-      getline(fileData, line);
-      std::istringstream iss(line);
+    std::string fecha;
+    int equipo1;
+    int equipo2;
+    int golesEquipo1;
+    int golesEquipo2;
 
-      std::string fecha;
-      int equipo1;
-      int equipo2;
-      int golesEquipo1;
-      int golesEquipo2;
+    iss >> fecha;
+    iss >> equipo1;
+    iss >> golesEquipo1;
+    iss >> equipo2;
+    iss >> golesEquipo2;
 
-      iss >> fecha;
-      iss >> equipo1;
-      iss >> golesEquipo1;
-      iss >> equipo2;
-      iss >> golesEquipo2;
+    equipo1 -= 1;
+    equipo2 -= 1;
 
-      if (golesEquipo1 > golesEquipo2) { // Gano el equipo 1
-        w[equipo1]++;
-        l[equipo2]++;
-      } else {
-        w[equipo2]++;
-        l[equipo1]++;
-      }
-
-      C[equipo1][equipo2]--;
-      C[equipo2][equipo1]--;
-
+    if (golesEquipo1 > golesEquipo2) { // Gano el equipo 1
+      w[equipo1]++;
+      l[equipo2]++;
+    } else {
+      w[equipo2]++;
+      l[equipo1]++;
     }
+
+    C[equipo1][equipo2]--;
+    C[equipo2][equipo1]--;
+
   }
 
   for (int i = 0 ; i < cantEquipos ; ++i) {
@@ -63,6 +61,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int fileT
     b[i] = 1 + (w[i] - l[i]) / 2; 
   }
 
+  C.mostrar();
   // Llamado a función con C matriz, b vector y hay que despejar r;
   // Este llamado va a depender del método 
 
