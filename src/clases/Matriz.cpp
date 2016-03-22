@@ -6,6 +6,15 @@ using namespace std;
 
 class Matriz {
 
+private:
+	void clean() {
+		for (int f = 0; f < filas; ++f) {
+			for (int c = 0; c < columnas; ++c) {
+				matriz[f][c] = 0;
+			}	
+		}
+	}
+
 public:
 	int filas, columnas;
 	vector< vector<int> > matriz;
@@ -44,19 +53,44 @@ public:
 		return *this;
 	}
 
-	//falta
-	Matriz& operator* (const Matriz& m) { return *this; }
-
-
-	Matriz& operator[][] (const Matriz& m, int i, int j) { 
-		return this->matriz[i][j];
+	Matriz& operator- (const Matriz& m) {
+		if (m.filas == this->filas && m.columnas == this->columnas) {
+		
+			for (int f = 0; f < filas; ++f) {
+				for (int c = 0; c < columnas; ++c) {
+					this->matriz[f][c] = this->matriz[f][c] - m.matriz[f][c];
+				}
+			}
+		
+		}
+		
+		return *this;
 	}
 
-	void set(int i, int j, int valor) {
+	Matriz& operator* (const Matriz& m) { 
+		Matriz* nueva = NULL;
+
+		if (this->columnas == m.filas) {
+			Matriz* nueva = new Matriz(m.filas, m.filas);
+
+			for (int f = 0; f < this->filas; ++f) {
+				for (int c = 0; c < this->columnas; ++c) {
+					for (int k = 0; k < this->columnas; ++k) {
+						nueva[f][c] += this->matriz[f][k] + m.matriz[k][c];
+					}
+				}
+			}
+
+		}
+
+		return *nueva;
+	}
+
+	void set(const int i, const int j, int valor) {
 		this->matriz[i][j] = valor;
 	}
 
-	void get(int i, int j) {
+	int get(const int i, const int j) {
 		return this->matriz[i][j];
 	}
 
