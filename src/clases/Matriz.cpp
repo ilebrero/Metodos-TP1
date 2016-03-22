@@ -1,4 +1,5 @@
 #include <vector>
+#include <assert.h>
 
 //h :D
 
@@ -19,26 +20,16 @@ public:
 	int filas, columnas;
 	vector< vector<float> > matriz;
 
-	Matriz() {
-		filas    = 5;
-		columnas = 5;
-		vector< vector<float> > fila(5, vector<float>(5));
-		matriz = fila;
-
-		for (int i = 0; i < 5; ++i) {
-			vector<float> columna(5);
-			matriz[i] = columna;
-			
-		}
-	}
-
 	Matriz(const int filas, const int columnas) {
 		this->filas    = filas;
 		this->columnas = columnas;
-		matriz = *(new vector< vector<float> > (filas));
+		vector< vector<float> > m(filas, vector<float>(columnas));
+		this->matriz = m;
 
 		for (int i = 0; i < filas; ++i) {
-			matriz.push_back( *(new vector <float> (columnas)) );
+			vector<float> columna(filas);
+			matriz[i] = columna;
+			
 		}
 	}
 
@@ -57,19 +48,16 @@ public:
 	}
 
 	Matriz& operator * (const Matriz& m) {
-		Matriz* nueva = NULL;
+		assert(this->columnas == m.filas);
 
-		if (this->columnas == m.filas) {
-			Matriz* nueva = new Matriz(m.filas, m.filas);
+		Matriz * nueva = new Matriz(this->columnas, m.filas);
 
-			for (int f = 0; f < this->filas; ++f) {
-				for (int c = 0; c < this->columnas; ++c) {
-					for (int k = 0; k < this->columnas; ++k) {
-						nueva->matriz[f][c] += this->matriz[f][k] + m.matriz[k][c];
-					}
+		for (int f = 0; f < this->filas; ++f) {
+			for (int c = 0; c < this->columnas; ++c) {
+				for (int k = 0; k < this->columnas; ++k) {
+					nueva->matriz[f][c] += this->matriz[f][k] + m.matriz[k][c];
 				}
 			}
-
 		}
 
 		return *nueva;
