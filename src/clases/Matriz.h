@@ -1,4 +1,11 @@
+#ifndef MATRIZ_H_
+#define MATRIZ_H_
+
 #include <vector>
+#include <assert.h>
+#include <cstdlib>
+#include <time.h>
+#include <iostream>
 
 using namespace std;
 
@@ -20,6 +27,9 @@ class Matriz {
     void randomizar(const int semilla);
     void mostrar();
 
+    int dimensionFilas() const;
+    int dimensionColumnas() const; 
+
   private:
 
 	/*******************************
@@ -35,3 +45,5 @@ class Matriz {
 
     void clean();
 };
+
+#endif

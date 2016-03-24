@@ -1,4 +1,5 @@
 #include "clases/Matriz.h"
+#include "factorizacion/gauss.cpp"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -60,6 +61,11 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int fileT
     C[i][i] = 2 + w[i] + l[i];
     b[i] = 1 + (w[i] - l[i]) / 2; 
   }
+
+  C.mostrar();
+  std::cout << "lalal" << std::endl;
+
+  gauss(C);
 
   C.mostrar();
   // Llamado a función con C matriz, b vector y hay que despejar r;

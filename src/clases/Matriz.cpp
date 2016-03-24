@@ -1,8 +1,4 @@
 #include "Matriz.h"
-#include <assert.h>
-#include <cstdlib>
-#include <time.h>
-#include <iostream>
 
 //h :D
 
@@ -20,13 +16,21 @@ Matriz::Matriz(const int filas, const int columnas) {
 
 }
 
+int Matriz::dimensionFilas() const {
+  return this->filas;
+}
+
+int Matriz::dimensionColumnas() const {
+  return this->columnas;
+}
+
 	/*******************************
 	 *          Operadores         *
 	 *******************************/ 
 
 Matriz& Matriz::operator * (const int i) {
-  for (int f = 0; f < filas; ++f) {
-    for (int c = 0; c < columnas; ++c) {
+  for (int f = 0; f < this->filas; ++f) {
+    for (int c = 0; c < this->columnas; ++c) {
       matriz [f][c] *= i;
     }
   }
@@ -35,9 +39,9 @@ Matriz& Matriz::operator * (const int i) {
 }
 
 Matriz& Matriz::operator * (const Matriz& m) {
-  assert(this->columnas == m.filas);
+  assert(this->columnas == m.dimensionFilas());
 
-  Matriz * nueva = new Matriz(this->columnas, m.filas);
+  Matriz * nueva = new Matriz(this->columnas, m.dimensionFilas());
 
   for (int f = 0; f < this->filas; ++f) {
     for (int c = 0; c < this->columnas; ++c) {
@@ -51,10 +55,10 @@ Matriz& Matriz::operator * (const Matriz& m) {
 }
 
 Matriz& Matriz::operator + (const Matriz& m) {
-  if (m.filas == this->filas && m.columnas == this->columnas) {
+  if (m.dimensionFilas() == this->filas && m.dimensionColumnas() == this->columnas) {
   
-    for (int f = 0; f < filas; ++f) {
-      for (int c = 0; c < columnas; ++c) {
+    for (int f = 0; f < this->filas; ++f) {
+      for (int c = 0; c < this->columnas; ++c) {
         this->matriz[f][c] = this->matriz[f][c] + m.matriz[f][c];
       }
     }
@@ -65,10 +69,10 @@ Matriz& Matriz::operator + (const Matriz& m) {
 }
 
 Matriz& Matriz::operator - (const Matriz& m) {
-  if (m.filas == this->filas && m.columnas == this->columnas) {
+  if (m.dimensionFilas() == this->filas && m.dimensionColumnas() == this->columnas) {
   
-    for (int f = 0; f < filas; ++f) {
-      for (int c = 0; c < columnas; ++c) {
+    for (int f = 0; f < this->filas; ++f) {
+      for (int c = 0; c < this->columnas; ++c) {
         this->matriz[f][c] = this->matriz[f][c] - m.matriz[f][c];
       }
     }
