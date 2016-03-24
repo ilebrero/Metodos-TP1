@@ -1,4 +1,4 @@
-#include "clases/Matriz.cpp"
+#include "clases/Matriz.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -65,9 +65,9 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int fileT
   // Llamado a función con C matriz, b vector y hay que despejar r;
   // Este llamado va a depender del método 
 
-  for (int i = 0 ; i < cantEquipos ; ++i) {
-    fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
-  }
+//  for (int i = 0 ; i < cantEquipos ; ++i) {
+//    fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
+//  }
 
   return 0;
 }
