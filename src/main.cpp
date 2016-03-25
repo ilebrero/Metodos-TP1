@@ -85,6 +85,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
 
   Matriz L(cantEquipos, cantEquipos);
+  std::vector<float> r;
 
   if (method == 0) {
     for (int i = 0 ; i < cantEquipos ; ++i) {
@@ -92,8 +93,9 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
       b[i] = 1 + (w[i] - l[i]) / 2; 
     }
 
+
     gauss(C);
-    //resolver sistema
+    r = resolverSistema(C, b);
   }
 
   if (method == 1) {
@@ -120,11 +122,15 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
   std::cout << "------------------------------------------" << std::endl;
 
-  L.mostrar();
+  b.mostrar();
 
-//  for (int i = 0 ; i < cantEquipos ; ++i) {
-//    fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
-//  }
+  std::cout << "------------------------------------------" << std::endl;
+
+  r.mostrar();
+
+  for (int i = 0 ; i < cantEquipos ; ++i) {
+    fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
+  }
 
   return 0;
 }
