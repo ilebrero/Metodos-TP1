@@ -9,7 +9,7 @@ BINARIES = main matriz gauss descomposicionLU
 all: $(BINARIES)
 
 main: main.cpp
-	$(CC) main.cpp clases/Matriz.cpp $(CFLAGS) main
+	$(CC) clases/Matriz.cpp main.cpp $(CFLAGS) main
 
 matriz: clases/Matriz.cpp
 	$(CC) clases/Matriz.cpp $(CFLAGS) matriz
