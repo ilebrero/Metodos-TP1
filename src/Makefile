@@ -18,7 +18,7 @@ matrizsimetrica: clases/MatrizSimetrica.cpp
 	$(CC) clases/MatrizSimetrica.cpp $(CFLAGS) matrizsimetrica
 
 gauss: factorizacion/gauss.cpp
-	$(CC) factorizacion/gauss.cpp $(CFLAGS) gauss
+	$(CC) clases/Matriz.cpp factorizacion/gauss.cpp $(CFLAGS) gauss
 
 descomposicionLU: factorizacion/descomposicionLU.cpp
 	$(CC) factorizacion/descomposicionLU.cpp $(CFLAGS) descomposicionLU

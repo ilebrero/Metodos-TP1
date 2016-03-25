@@ -1,6 +1,6 @@
 #include "MatrizSimetrica.h"
 
-MatrizSimetrica::MatrizSimetrica(const int filas, const int columnas) {
+MatrizSimetrica::MatrizSimetrica(int filas, int columnas) {
   this->filas    = filas;
   this->columnas = columnas;
   vector< vector<float> > m(filas, vector<float>(filas));
@@ -12,11 +12,11 @@ MatrizSimetrica::MatrizSimetrica(const int filas, const int columnas) {
   }
 }
 
-int MatrizSimetrica::dimensionFilas() const {
+int MatrizSimetrica::dimensionFilas() {
   return this->filas;
 }
 
-int MatrizSimetrica::dimensionColumnas() const {
+int MatrizSimetrica::dimensionColumnas() {
   return this->columnas;
 }
 
@@ -24,33 +24,31 @@ int MatrizSimetrica::dimensionColumnas() const {
      *          Operadores         *
      *******************************/ 
 
-float MATRIZ_H_
-
-float MatrizSimetrica::get(const int f, const int c) {
+float MatrizSimetrica::get(int f, int c) {
   if (c < f) {
-    return m [f][c];
+    return this->matriz[f][c];
   } else {
-    return m [c][f];
+    return this->matriz[c][f];
   }
 }
 
-float MatrizSimetrica::set(const int f, const int c, const float valor) {
+void MatrizSimetrica::set(int f, int c, float valor) {
   if (c < f) {
-    m [f][c] = valor;
+    matriz [f][c] = valor;
   }
 }
 
-MatrizSimetrica& MatrizSimetrica::operator * (const int i) {
+MatrizSimetrica& MatrizSimetrica::operator * (int i) {
   for (int f = 0; f < this->filas; ++f) {
     for (int c = 0; c < this->columnas; ++c) {
-      matriz.get(f, c) *= i;
+      this->set(f, c, this->get(f,c)*i);
     }
   }
   
   return *this;
 }
 
-Matriz& MatrizSimetrica::operator * (const Matriz& m) {
+Matriz& MatrizSimetrica::operator * (Matriz& m) {
   assert(this->columnas == m.dimensionFilas());
 
   Matriz * nueva = new Matriz(this->columnas, m.dimensionFilas());
@@ -58,7 +56,7 @@ Matriz& MatrizSimetrica::operator * (const Matriz& m) {
   for (int f = 0; f < this->filas; ++f) {
     for (int c = 0; c < this->columnas; ++c) {
       for (int k = 0; k < this->columnas; ++k) {
-        nueva->matriz[f][c] += this->get(f,k) + m.matriz[k][c];
+        (*nueva)[f][c] += this->get(f,k) + m[k][c];
       }
     }
   }
@@ -66,7 +64,7 @@ Matriz& MatrizSimetrica::operator * (const Matriz& m) {
   return *nueva;
 }
 
-Matriz& MatrizSimetrica::operator * (const MatrizSimetrica& m) {
+Matriz& MatrizSimetrica::operator * (MatrizSimetrica& m) {
   assert(this->columnas == m.dimensionFilas());
 
   Matriz * nueva = new Matriz(this->columnas, m.dimensionFilas());
@@ -74,7 +72,7 @@ Matriz& MatrizSimetrica::operator * (const MatrizSimetrica& m) {
   for (int f = 0; f < this->filas; ++f) {
     for (int c = 0; c < this->columnas; ++c) {
       for (int k = 0; k < this->columnas; ++k) {
-        nueva->matriz[f][c] += this->get(f,k) + m.get(k,c);
+        (*nueva)[f][c] += this->get(f,k) * m.get(k,c);
       }
     }
   }
@@ -82,40 +80,7 @@ Matriz& MatrizSimetrica::operator * (const MatrizSimetrica& m) {
   return *nueva;
 }
 
-/*
-Matriz& MatrizSimetrica::operator + (const Matriz& m) {
-
-  Matriz * nueva = new Matriz(this->columnas, m.dimensionFilas());
-
-  if (m.dimensionFilas() == this->filas && m.dimensionColumnas() == this->columnas) {
-  
-    for (int f = 0; f < this->filas; ++f) {
-      for (int c = 0; c < this->columnas; ++c) {
-        this->matriz[f][c] = this->matriz[f][c] + m.matriz[f][c];
-      }
-    }
-  
-  }
-  
-  return *this;
-}
-
-Matriz& MatrizSimetrica::operator - (const Matriz& m) {
-  if (m.dimensionFilas() == this->filas && m.dimensionColumnas() == this->columnas) {
-  
-    for (int f = 0; f < this->filas; ++f) {
-      for (int c = 0; c < this->columnas; ++c) {
-        this->matriz[f][c] = this->matriz[f][c] - m.matriz[f][c];
-      }
-    }
-  
-  }
-  
-  return *this;
-}
-*/
-
-void MatrizSimetrica::randomizar(const int semilla) {
+void MatrizSimetrica::randomizar(int semilla) {
   srand( semilla );
 
   for (int f = 0; f < filas; ++f) {
@@ -150,9 +115,4 @@ void MatrizSimetrica::clean() {
       matriz[f][c] = 0;
     }
   }
-}
-
-int main() {
-  MatrizSimetrica m(5, 5);
-  m.set(0,0)
 }

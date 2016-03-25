@@ -1,7 +1,33 @@
 #include "../clases/Matriz.h"
 //#include <assert.h>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
-void combLineal(Matriz &m, int j, float k, int i){ //E_j = E_j + k*E_i
+Matriz crearMatriz(std::string file){ //en la primer línea #filas #columnas y después la matriz
+  std::string line;
+  std::ifstream fileData (file.c_str());
+
+  getline(fileData, line);
+  std::istringstream iss(line);
+  int filas, columnas;
+  iss >> filas;
+  iss >> columnas;
+
+  Matriz res(filas, columnas);
+
+  for(int i = 0; i < filas; ++i){
+    getline(fileData, line);
+    std::istringstream iss(line);
+    for(int j = 0; j < columnas; ++j){
+      iss >> res[i][j];
+    }
+  }
+  return res;
+}
+
+void combLineal(Matriz &m, int j, float k, int i){ //E_j = E_j - k*E_i
   assert (i < m.dimensionFilas());
   assert (j < m.dimensionFilas());
   
@@ -27,7 +53,7 @@ void gauss(Matriz& m) {
     for(int j = i+1; j < n; ++j){
       if(m[i][i] != 0){
         float k = m[j][i]/m[i][i];
-        combLineal(m, j, k, i); //fila j + k * fila i
+        combLineal(m, j, k, i); //fila j - k * fila i
       } else {
         permutar(m, i, i+1);
       }
@@ -35,22 +61,51 @@ void gauss(Matriz& m) {
   }
 }
 
-/*
-int main(){
+
+Matriz gaussLU(Matriz& m) { //devuelve matriz L
+  int n = m.dimensionFilas();
+  Matriz res = Matriz(n, m.dimensionColumnas()); // res = L
   
-  Matriz m (4,4);
-  m[0][0] = 1; 
-  m[1][2] = 1; 
-  m[1][3] = 1; 
-  m[2][1] = 1; 
-  m[3][1] = 2; 
-  m[3][2] = 1;
-  m[3][3] = 1;
+  for(int k = 0; k < n; ++k){ //completo con 1 en la diagonal de L
+    res[k][k] = 1;
+  }
+  
+  for(int i = 0; i < n-1; ++i){
+    for(int j = i+1; j < n; ++j){
+      if(m[i][i] != 0){
+        float k = m[j][i]/m[i][i];
+        combLineal(m, j, k, i); //fila j - k * fila i
+        res[j][i] = k; //completo matriz L
+      } else {
+        permutar(m, i, i+1); //creo que no entra en este caso. VER
+      }
+    }
+  }
+  return res;
+}
 
-  m.mostrar();
+void test_gauss(Matriz& m) { //no es exactamente 0
   gauss(m);
+  std::cout << "La matriz diagonalizada es: " << std::endl; 
   m.mostrar();
+}
 
+void test_gaussLU(Matriz& m) { //no es exactamente 0
+  Matriz lu = gaussLU(m);
+  std::cout << "La matriz diagonalizada es: " << std::endl; 
+  m.mostrar();
+  std::cout << "La matriz LU es: " << std::endl; 
+  lu.mostrar();
+}
+
+int main(int arc, char** argv) {  
+  
+  std::string fileTestData(argv[1]);
+  std::cout << "La matriz original es: " << std::endl; 
+  Matriz m = crearMatriz(fileTestData);
+  m.mostrar();
+  //test_gauss(m);
+  test_gaussLU(m);
+   
   return 0;
 }
-*/
