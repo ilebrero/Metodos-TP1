@@ -1,4 +1,5 @@
 #include "clases/Matriz.h"
+#include "clases/MatrizSimetrica.h"
 #include "factorizacion/gauss.cpp"
 #include "factorizacion/cholesky.cpp"
 #include <string>
@@ -128,12 +129,26 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
   return 0;
 }
 
-void test1(){
-
+std::vector<float> resolverSistema(Matriz& m, vector<float>& b) { //m diagonalizada, 
+  assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
   
- 
+  vector<float> res (b.size());
 
+  int n = m.dimensionFilas();
+  int k = m.dimensionColumnas();
+
+  float aux;
+
+  for(int i = n-1; i >= 0; --i){
+    aux = 0;
+    for (int j = k-1; j > i; --j){
+      aux = aux + m[i][j] * res[j];
+    }
+    res[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
+  }
+  return res;
 }
+
 
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);

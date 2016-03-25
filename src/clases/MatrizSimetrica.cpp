@@ -25,7 +25,7 @@ int MatrizSimetrica::dimensionColumnas() {
      *******************************/ 
 
 float MatrizSimetrica::get(int f, int c) {
-  if (c < f) {
+  if (c <= f) {
     return this->matriz[f][c];
   } else {
     return this->matriz[c][f];
@@ -33,7 +33,7 @@ float MatrizSimetrica::get(int f, int c) {
 }
 
 void MatrizSimetrica::set(int f, int c, float valor) {
-  if (c < f) {
+  if (c <= f) {
     matriz [f][c] = valor;
   }
 }
@@ -84,8 +84,8 @@ void MatrizSimetrica::randomizar(int semilla) {
   srand( semilla );
 
   for (int f = 0; f < filas; ++f) {
-    for (int c = 0; c < columnas; ++c) {
-      matriz[f][c] = rand() % 1000 + 1;
+    for (int c = 0; c <= f; ++c) {
+      this->set(f,c, rand() % 1000 + 1);
     }   
   } 
 }
@@ -95,9 +95,9 @@ void MatrizSimetrica::mostrar() {
     cout << "  ";
     for (int c = 0; c < columnas; ++c) {
       if (this->get(f,c) < 0) {
-        cout << "| " << matriz[f][c] << "  |" << " ";
+        cout << "| " << this->get(f,c) << "  |" << " ";
       } else {
-        cout << "|  " << matriz[f][c] << "  |" << " ";
+        cout << "|  " << this->get(f,c) << "  |" << " ";
       }
     }
 
@@ -111,7 +111,7 @@ void MatrizSimetrica::mostrar() {
 
 void MatrizSimetrica::clean() {
   for (int f = 0; f < filas; ++f) {
-    for (int c = 0; c < columnas; ++c) {
+    for (int c = 0; c <= f; ++c) {
       matriz[f][c] = 0;
     }
   }
