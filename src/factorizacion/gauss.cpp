@@ -5,6 +5,16 @@
 #include <sstream>
 #include <iostream>
 
+#define EPSILON 1.19e-7f
+
+bool igualdadConTolerancia(float a, float b) {
+  if (a - b < EPSILON) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 Matriz crearMatriz(std::string file){ //en la primer línea #filas #columnas y después la matriz
   std::string line;
   std::ifstream fileData (file.c_str());
@@ -58,7 +68,7 @@ void gauss(Matriz& m) {
   int n = m.dimensionFilas();
   for(int i = 0; i < n; ++i){
     for(int j = i+1; j < n; ++j){
-      if(m[i][i] != 0){
+      if( !igualdadConTolerancia(m[i][i], 0) ){
         float k = m[j][i]/m[i][i];
         combLineal(m, j, k, i); //fila j - k * fila i
         combLinealV(b, j, k, i);
@@ -80,7 +90,7 @@ Matriz gaussLU(Matriz& m, vector<float>& b) { //devuelve matriz L
   
   for(int i = 0; i < n-1; ++i){
     for(int j = i+1; j < n; ++j){
-      if(m[i][i] != 0){
+      if( !igualdadConTolerancia(m[i][i], 0) ){
         float k = m[j][i]/m[i][i];
         combLineal(m, j, k, i); //fila j - k * fila i
         combLinealV(b, j, k, i);
