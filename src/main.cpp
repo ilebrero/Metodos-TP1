@@ -1,4 +1,5 @@
 #include "clases/Matriz.h"
+#include "clases/MatrizSimetrica.h"
 #include "factorizacion/gauss.cpp"
 #include <string>
 #include <fstream>

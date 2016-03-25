@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <time.h>
 #include <iostream>
+#include "MatrizSimetrica.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ class Matriz {
 
     Matriz& operator * (const int i);
     Matriz& operator * (const Matriz& m);
+    Matriz& operator * (const MatrizSimetrica& m);
 
     Matriz& operator + (const Matriz& m);
 

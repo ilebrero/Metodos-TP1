@@ -54,6 +54,22 @@ Matriz& Matriz::operator * (const Matriz& m) {
   return *nueva;
 }
 
+Matriz& Matriz::operator * (const MatrizSimetrica& m) {
+  assert(this->columnas == m.dimensionFilas());
+
+  Matriz * nueva = new Matriz(this->columnas, m.dimensionFilas());
+
+  for (int f = 0; f < this->filas; ++f) {
+    for (int c = 0; c < this->columnas; ++c) {
+      for (int k = 0; k < this->columnas; ++k) {
+        nueva->matriz[f][c] += this->matriz[f][k] + m.get(k,c);
+      }
+    }
+  }
+
+  return *nueva;
+}
+
 Matriz& Matriz::operator + (const Matriz& m) {
   if (m.dimensionFilas() == this->filas && m.dimensionColumnas() == this->columnas) {
   
