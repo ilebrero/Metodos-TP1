@@ -106,21 +106,22 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
   std::vector<float> r;
   std::vector<float> y;
 
+
+
   if (method == 0) {
     for (int i = 0 ; i < cantEquipos ; ++i) {
       C[i][i] = 2 + w[i] + l[i];
-      b[i] = 1 + (w[i] - l[i]) / 2; 
+      b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
     }
 
-
-    gauss(C);
+    gauss(C, b);
     r = resolverSistema(C, b);
   }
 
   if (method == 1) {
     for (int i = 0 ; i < cantEquipos ; ++i) {
       C[i][i] = 2 + w[i] + l[i];
-      b[i] = 1 + (w[i] - l[i]) / 2; 
+      b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
     }
     
     L = cholesky(C);
@@ -141,17 +142,6 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
     // Aca se llama tanto a cholesky como a gauss?
     
   }
-
-  std::cout << "------------------------------------------" << std::endl;
-  C.mostrar();
-  std::cout << "------------------------------------------" << std::endl;
-
-  for (int i = 0 ; i < cantEquipos ; ++i) {
-    std::cout << "b[ " << i << " ] = " << std::fixed  << b[i] << std::endl; 
-  }
-
-
-  std::cout << "------------------------------------------" << std::endl;
 
   for (int i = 0 ; i < cantEquipos ; ++i) {
     fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
@@ -174,4 +164,22 @@ int main(int argc, char** argv) {
 
   return 0;
 }
+/*
+  std::cout << "------------------------------------------" << std::endl;
+  C.mostrar();
+  std::cout << "------------------------------------------" << std::endl;
 
+  
+  for (int i = 0 ; i < cantEquipos ; ++i) {
+    std::cout << "b[ " << i << " ] = " << std::fixed  << b[i] << std::endl; 
+  }
+
+
+  for (int i = 0 ; i < cantEquipos ; ++i) {
+    std::cout << "w[ " << i << " ] = " << std::fixed  << w[i] << std::endl; 
+  }
+
+  for (int i = 0 ; i < cantEquipos ; ++i) {
+    std::cout << "l[ " << i << " ] = " << std::fixed  << l[i] << std::endl; 
+  }
+*/

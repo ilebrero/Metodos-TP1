@@ -48,7 +48,7 @@ void combLinealV(vector<float> &b, int j, float k, int i){ //E_j = E_j - k*E_i
   assert (i < b.size());
   assert (j < b.size());
   
-  for(int t = 0; t < b.size(); ++t) b[j][t] = b[j][t] - k*b[i][t]; 
+  b[j] = b[j] - k*b[i]; 
 }
 
 void permutar(Matriz &m, int i, int j){ //permuta fila i con j
@@ -64,7 +64,7 @@ void permutar(Matriz &m, int i, int j){ //permuta fila i con j
   }
 }
 
-void gauss(Matriz& m) {
+void gauss(Matriz& m, vector<float>& b) {
   int n = m.dimensionFilas();
   for(int i = 0; i < n; ++i){
     for(int j = i+1; j < n; ++j){
@@ -103,6 +103,7 @@ Matriz gaussLU(Matriz& m, vector<float>& b) { //devuelve matriz L
   return res;
 }
 
+/*
 void test_gauss(Matriz& m) { //no es exactamente 0
   gauss(m);
   std::cout << "La matriz diagonalizada es: " << std::endl; 
@@ -116,7 +117,7 @@ void test_gaussLU(Matriz& m) { //no es exactamente 0
   std::cout << "La matriz LU es: " << std::endl; 
   lu.mostrar();
 }
-
+*/
 /*
 int main(int arc, char** argv) {  
   
