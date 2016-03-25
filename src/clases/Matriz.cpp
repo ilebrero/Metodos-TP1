@@ -1,9 +1,6 @@
 #include "Matriz.h"
 
-//h :D
-
-
-Matriz::Matriz(const int filas, const int columnas) {
+Matriz::Matriz(int filas, int columnas) {
   this->filas    = filas;
   this->columnas = columnas;
   vector< vector<float> > m(filas, vector<float>(columnas));
@@ -16,11 +13,11 @@ Matriz::Matriz(const int filas, const int columnas) {
 
 }
 
-int Matriz::dimensionFilas() const {
+int Matriz::dimensionFilas() {
   return this->filas;
 }
 
-int Matriz::dimensionColumnas() const {
+int Matriz::dimensionColumnas(){
   return this->columnas;
 }
 
@@ -28,7 +25,7 @@ int Matriz::dimensionColumnas() const {
 	 *          Operadores         *
 	 *******************************/ 
 
-Matriz& Matriz::operator * (const int i) {
+Matriz& Matriz::operator * (int i) {
   for (int f = 0; f < this->filas; ++f) {
     for (int c = 0; c < this->columnas; ++c) {
       matriz [f][c] *= i;
@@ -38,7 +35,7 @@ Matriz& Matriz::operator * (const int i) {
   return *this;
 }
 
-Matriz& Matriz::operator * (const Matriz& m) {
+Matriz& Matriz::operator * (Matriz& m) {
   assert(this->columnas == m.dimensionFilas());
 
   Matriz * nueva = new Matriz(this->columnas, m.dimensionFilas());
@@ -46,7 +43,7 @@ Matriz& Matriz::operator * (const Matriz& m) {
   for (int f = 0; f < this->filas; ++f) {
     for (int c = 0; c < this->columnas; ++c) {
       for (int k = 0; k < this->columnas; ++k) {
-        nueva->matriz[f][c] += this->matriz[f][k] + m.matriz[k][c];
+        nueva->matriz[f][c] += this->matriz[f][k] * m.matriz[k][c];
       }
     }
   }
@@ -54,7 +51,23 @@ Matriz& Matriz::operator * (const Matriz& m) {
   return *nueva;
 }
 
-Matriz& Matriz::operator + (const Matriz& m) {
+Matriz& Matriz::operator * (MatrizSimetrica& m) {
+  assert(this->columnas == m.dimensionFilas());
+
+  Matriz * nueva = new Matriz(this->columnas, m.dimensionFilas());
+
+  for (int f = 0; f < this->filas; ++f) {
+    for (int c = 0; c < this->columnas; ++c) {
+      for (int k = 0; k < this->columnas; ++k) {
+        nueva->matriz[f][c] += this->matriz[f][k] * m.get(k,c);
+      }
+    }
+  }
+
+  return *nueva;
+}
+
+Matriz& Matriz::operator + (Matriz& m) {
   if (m.dimensionFilas() == this->filas && m.dimensionColumnas() == this->columnas) {
   
     for (int f = 0; f < this->filas; ++f) {
@@ -68,7 +81,7 @@ Matriz& Matriz::operator + (const Matriz& m) {
   return *this;
 }
 
-Matriz& Matriz::operator - (const Matriz& m) {
+Matriz& Matriz::operator - (Matriz& m) {
   if (m.dimensionFilas() == this->filas && m.dimensionColumnas() == this->columnas) {
   
     for (int f = 0; f < this->filas; ++f) {
@@ -82,11 +95,11 @@ Matriz& Matriz::operator - (const Matriz& m) {
   return *this;
 }
 
-vector<float>& Matriz::operator [] (const int fila) {
+vector<float>& Matriz::operator [] (int fila) {
       return this->matriz[fila];
-  }
+}
 
-void Matriz::randomizar(const int semilla) {
+void Matriz::randomizar(int semilla) {
   srand( semilla );
 
   for (int f = 0; f < filas; ++f) {
@@ -122,13 +135,3 @@ void Matriz::clean() {
     }
   }
 }
-
-/*
-int main() {
-  Matriz A(5,5);
-  A[2][3] = -1;
-  A.mostrar();
-
-  return 0;
-}
-*/

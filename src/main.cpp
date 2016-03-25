@@ -1,5 +1,7 @@
 #include "clases/Matriz.h"
+#include "clases/MatrizSimetrica.h"
 #include "factorizacion/gauss.cpp"
+#include "factorizacion/cholesky.cpp"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -30,7 +32,7 @@
 //
 //}
 
-int evaluarTests(std::string fileTestData, std::string fileTestResult, int fileTestWrite) {
+int evaluarTests(std::string fileTestData, std::string fileTestResult, int method) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
   std::ofstream fileWrite (fileTestResult.c_str());
@@ -86,14 +88,29 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int fileT
     b[i] = 1 + (w[i] - l[i]) / 2; 
   }
 
-  C.mostrar();
-  std::cout << "lalal" << std::endl;
+  Matriz L(cantEquipos, cantEquipos);
 
-  gauss(C);
+  switch (method) {
+    case 0:
+      gauss(C);
+      break;
+
+    case 1:
+      L = cholesky(C);
+      break;
+
+    //case 2:
+    //  wp(C);
+    //  break;
+    default:
+      std::cout << "Me pasaste cualquier fruta vieja" << std::endl;
+  }
 
   C.mostrar();
-  // Llamado a función con C matriz, b vector y hay que despejar r;
-  // Este llamado va a depender del método 
+
+  std::cout << "------------------------------------------" << std::endl;
+
+  L.mostrar();
 
 //  for (int i = 0 ; i < cantEquipos ; ++i) {
 //    fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 

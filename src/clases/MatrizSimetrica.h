@@ -1,8 +1,8 @@
-#ifndef MATRIZ_H_
-#define MATRIZ_H_
+#ifndef MATRIZSIMETRICA_H_
+#define MATRIZSIMETRICA_H_
 
-class MatrizSimetrica;
-#include "MatrizSimetrica.h"
+class Matriz;
+#include "Matriz.h"
 #include <vector>
 #include <assert.h>
 #include <cstdlib>
@@ -11,27 +11,24 @@ class MatrizSimetrica;
 
 using namespace std;
 
-class Matriz {
+class MatrizSimetrica {
 
   public:
 
-    Matriz(int filas, int columnas);
+    MatrizSimetrica(int filas, int columnas);
 
-    Matriz& operator * (int i);
-    Matriz& operator * (Matriz& m);
+    MatrizSimetrica& operator * (int i);
     Matriz& operator * (MatrizSimetrica& m);
+    Matriz& operator * (Matriz& m);
 
-    Matriz& operator + (Matriz& m);
-
-    Matriz& operator - (Matriz& m);
-
-    vector<float>& operator [] (int fila);
+    void  set(int, int, float);
+    float get(int, int);
 
     void randomizar(int semilla);
     void mostrar();
 
     int dimensionFilas();
-    int dimensionColumnas(); 
+    int dimensionColumnas();
 
   private:
 
