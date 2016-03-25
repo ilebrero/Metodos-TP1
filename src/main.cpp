@@ -6,6 +6,30 @@
 #include <iostream>
 #include <vector>
 
+//Matriz crearMatriz(std::string file){ //en la primer línea #filas #columnas y después la matriz
+//  std::string line;
+//  std::ifstream fileData (file.c_str());
+//
+//  getline(fileData, line);
+//  std::istringstream iss(line);
+//  int filas, columnas;
+//  iss >> filas;
+//  iss >> columnas;
+//
+//  Matriz res(filas, columnas);
+//
+//  for(int i = 0; i < filas; ++i){
+//    getline(fileData, line);
+//    std::istringstream iss(line);
+//    for(int j = 0; j < columnas; ++j){
+//      iss >> res[i][j];
+//    }
+//  }
+//
+//  res.mostrar();
+//
+//}
+
 int evaluarTests(std::string fileTestData, std::string fileTestResult, int fileTestWrite) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
@@ -78,6 +102,13 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int fileT
   return 0;
 }
 
+void test1(){
+
+  
+ 
+
+}
+
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
   std::string fileTestResult(argv[2]);
@@ -87,8 +118,8 @@ int main(int argc, char** argv) {
   // El segundo en el cual evaluo si los resultados fueron correctos
   // El tercero el método a realizar (0 CMM-EG, 1 CMM-CL, 2 WP)
 
-  evaluarTests(fileTestData, fileTestResult, method);
-  
+  //evaluarTests(fileTestData, fileTestResult, method);
+
   return 0;
 }
 
