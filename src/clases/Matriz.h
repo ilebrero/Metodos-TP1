@@ -28,6 +28,7 @@ class Matriz {
     vector<float>& operator [] (int fila);
 
     void randomizar(int semilla);
+    void transponer();
     void mostrar();
 
     int dimensionFilas();
