@@ -41,7 +41,7 @@ Matriz& cholesky(Matriz &m) {
   return *L;
 
 }
-
+/*
 int main() {
   Matriz m(3, 3);
 
@@ -55,7 +55,6 @@ int main() {
   m[1][2] = 2.75;
   m[2][2] = 3.5;
 
-/*
   m[0][0] = 25;
   m[1][0] = 15;
   m[2][0] = -5;
@@ -65,7 +64,6 @@ int main() {
   m[0][2] = -5;
   m[1][2] = 0;
   m[2][2] = 11;
-*/
   m.mostrar();
 
   Matriz L = cholesky(m);
@@ -76,4 +74,4 @@ int main() {
 
   return 0;
 }
-
+*/

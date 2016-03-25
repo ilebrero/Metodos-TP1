@@ -31,6 +31,25 @@
 //  res.mostrar();
 //
 //}
+std::vector<float> resolverSistema(Matriz& m, vector<float>& b) { //m diagonalizada, 
+  assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
+  
+  vector<float> res (b.size());
+
+  int n = m.dimensionFilas();
+  int k = m.dimensionColumnas();
+
+  float aux;
+
+  for(int i = n-1; i >= 0; --i){
+    aux = 0;
+    for (int j = k-1; j > i; --j){
+      aux = aux + m[i][j] * res[j];
+    }
+    res[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
+  }
+  return res;
+}
 
 int evaluarTests(std::string fileTestData, std::string fileTestResult, int method) {
   std::string line;
@@ -49,7 +68,6 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
   vector<int> w(cantEquipos, 0); // Cada posición tiene el numero de partidos ganados por el equipo i
   vector<int> l(cantEquipos, 0); // Cada posición tiene el numero de partidos perdidos por el equipo i
   vector<float> b(cantEquipos, 0); // Vector del sistema Cr = b
-  vector<float> r(cantEquipos, 0); // Solución del sistema Cr = b
 
   while (getline (fileData, line)) {
 
@@ -86,6 +104,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
   Matriz L(cantEquipos, cantEquipos);
   std::vector<float> r;
+  std::vector<float> y;
 
   if (method == 0) {
     for (int i = 0 ; i < cantEquipos ; ++i) {
@@ -103,9 +122,14 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
       C[i][i] = 2 + w[i] + l[i];
       b[i] = 1 + (w[i] - l[i]) / 2; 
     }
-
+    
     L = cholesky(C);
-    //resoler sistema
+    Matriz LT = L;
+    LT.transponer();
+
+    y = resolverSistema(L, b);
+    LT.mostrar();
+    r = resolverSistema(LT, y);
   }
 
   if (method == 2) {
@@ -118,41 +142,22 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
     
   }
 
+  std::cout << "------------------------------------------" << std::endl;
   C.mostrar();
-
   std::cout << "------------------------------------------" << std::endl;
 
-  b.mostrar();
+  for (int i = 0 ; i < cantEquipos ; ++i) {
+    std::cout << "b[ " << i << " ] = " << std::fixed  << b[i] << std::endl; 
+  }
+
 
   std::cout << "------------------------------------------" << std::endl;
-
-  r.mostrar();
 
   for (int i = 0 ; i < cantEquipos ; ++i) {
     fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
   }
 
   return 0;
-}
-
-std::vector<float> resolverSistema(Matriz& m, vector<float>& b) { //m diagonalizada, 
-  assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
-  
-  vector<float> res (b.size());
-
-  int n = m.dimensionFilas();
-  int k = m.dimensionColumnas();
-
-  float aux;
-
-  for(int i = n-1; i >= 0; --i){
-    aux = 0;
-    for (int j = k-1; j > i; --j){
-      aux = aux + m[i][j] * res[j];
-    }
-    res[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
-  }
-  return res;
 }
 
 
@@ -165,7 +170,7 @@ int main(int argc, char** argv) {
   // El segundo en el cual evaluo si los resultados fueron correctos
   // El tercero el método a realizar (0 CMM-EG, 1 CMM-CL, 2 WP)
 
-  //evaluarTests(fileTestData, fileTestResult, method);
+  evaluarTests(fileTestData, fileTestResult, method);
 
   return 0;
 }
