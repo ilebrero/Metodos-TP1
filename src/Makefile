@@ -18,13 +18,13 @@ matrizsimetrica: clases/MatrizSimetrica.cpp
 	$(CC) clases/MatrizSimetrica.cpp $(CFLAGS) matrizsimetrica
 
 gauss: factorizacion/gauss.cpp
-	$(CC) clases/Matriz.cpp factorizacion/gauss.cpp $(CFLAGS) gauss
+	$(CC) clases/Matriz.cpp clases/MatrizSimetrica.cpp factorizacion/gauss.cpp $(CFLAGS) gauss
 
 descomposicionLU: factorizacion/descomposicionLU.cpp
 	$(CC) factorizacion/descomposicionLU.cpp $(CFLAGS) descomposicionLU
 
 cholesky: factorizacion/cholesky.cpp
-	$(CC) factorizacion/cholesky.cpp clases/Matriz.cpp $(CFLAGS) cholesky
+	$(CC) factorizacion/cholesky.cpp clases/MatrizSimetrica.cpp clases/Matriz.cpp $(CFLAGS) cholesky
 
 clean:
 	rm -f ./*.o main
