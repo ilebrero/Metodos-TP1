@@ -21,6 +21,17 @@ int Matriz::dimensionColumnas(){
   return this->columnas;
 }
 
+void Matriz::transponer() {
+  for (int f = 0; f < this->filas; ++f) {
+    for (int c = f+1; c < columnas; ++c) {
+      float aux = this->matriz[f][c];
+      
+      this->matriz[f][c] = this->matriz[c][f];
+      this->matriz[c][f] = aux;
+    }
+  }
+}
+
 	/*******************************
 	 *          Operadores         *
 	 *******************************/ 
