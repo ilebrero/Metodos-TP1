@@ -1,12 +1,13 @@
 #ifndef MATRIZ_H_
 #define MATRIZ_H_
 
+class MatrizSimetrica;
+#include "MatrizSimetrica.h"
 #include <vector>
 #include <assert.h>
 #include <cstdlib>
 #include <time.h>
 #include <iostream>
-#include "MatrizSimetrica.h"
 
 using namespace std;
 
@@ -14,23 +15,23 @@ class Matriz {
 
   public:
 
-    Matriz(const int filas, const int columnas);
+    Matriz(int filas, int columnas);
 
-    Matriz& operator * (const int i);
-    Matriz& operator * (const Matriz& m);
-    Matriz& operator * (const MatrizSimetrica& m);
+    Matriz& operator * (int i);
+    Matriz& operator * (Matriz& m);
+    Matriz& operator * (MatrizSimetrica& m);
 
-    Matriz& operator + (const Matriz& m);
+    Matriz& operator + (Matriz& m);
 
-    Matriz& operator - (const Matriz& m);
+    Matriz& operator - (Matriz& m);
 
-    vector<float>& operator [] (const int fila);
+    vector<float>& operator [] (int fila);
 
-    void randomizar(const int semilla);
+    void randomizar(int semilla);
     void mostrar();
 
-    int dimensionFilas() const;
-    int dimensionColumnas() const; 
+    int dimensionFilas();
+    int dimensionColumnas(); 
 
   private:
 
