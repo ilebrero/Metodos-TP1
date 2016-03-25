@@ -82,27 +82,37 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
   }
 
-  for (int i = 0 ; i < cantEquipos ; ++i) {
-    C[i][i] = 2 + w[i] + l[i];
-    b[i] = 1 + (w[i] - l[i]) / 2; 
-  }
 
   Matriz L(cantEquipos, cantEquipos);
 
-  switch (method) {
-    case 0:
-      gauss(C);
-      break;
+  if (method == 0) {
+    for (int i = 0 ; i < cantEquipos ; ++i) {
+      C[i][i] = 2 + w[i] + l[i];
+      b[i] = 1 + (w[i] - l[i]) / 2; 
+    }
 
-    case 1:
-      L = cholesky(C);
-      break;
+    gauss(C);
+    //resolver sistema
+  }
 
-    //case 2:
-    //  wp(C);
-    //  break;
-    default:
-      std::cout << "Me pasaste cualquier fruta vieja" << std::endl;
+  if (method == 1) {
+    for (int i = 0 ; i < cantEquipos ; ++i) {
+      C[i][i] = 2 + w[i] + l[i];
+      b[i] = 1 + (w[i] - l[i]) / 2; 
+    }
+
+    L = cholesky(C);
+    //resoler sistema
+  }
+
+  if (method == 2) {
+    for (int i = 0 ; i < cantEquipos ; ++i) {
+      C[i][i] = 2 + w[i] + l[i];
+      b[i] = w[i] / (w[i] + l[i]); 
+    }
+
+    // Aca se llama tanto a cholesky como a gauss?
+    
   }
 
   C.mostrar();

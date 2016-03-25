@@ -97,7 +97,7 @@ void test_gaussLU(Matriz& m) { //no es exactamente 0
   std::cout << "La matriz LU es: " << std::endl; 
   lu.mostrar();
 }
-
+/*
 int main(int arc, char** argv) {  
   
   std::string fileTestData(argv[1]);
@@ -109,3 +109,4 @@ int main(int arc, char** argv) {
    
   return 0;
 }
+*/
