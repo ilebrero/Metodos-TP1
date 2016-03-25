@@ -31,7 +31,28 @@
 //  res.mostrar();
 //
 //}
-std::vector<float> resolverSistema(Matriz& m, vector<float>& b) { //m diagonalizada, 
+
+std::vector<float> resolverSistemaParaAdelante(Matriz& m, vector<float>& b) { //m diagonalizada, 
+  assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
+  
+  vector<float> res (b.size());
+
+  int n = m.dimensionFilas();
+  int k = m.dimensionColumnas();
+
+  float aux;
+
+  for(int i = 0; i < n; ++i){
+    aux = 0;
+    for (int j = 0; j < k-1; ++j){
+      aux = aux + m[i][j] * res[j];
+    }
+    res[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
+  }
+  return res;
+}
+
+std::vector<float> resolverSistemaParaAtras(Matriz& m, vector<float>& b) { //m diagonalizada, 
   assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
   
   vector<float> res (b.size());
@@ -115,7 +136,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
     }
 
     gauss(C, b);
-    r = resolverSistema(C, b);
+    r = resolverSistemaParaAtras(C, b);
   }
 
   if (method == 1) {
@@ -128,9 +149,9 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
     Matriz LT = L;
     LT.transponer();
 
-    y = resolverSistema(L, b);
+    y = resolverSistemaParaAtras(L, b);
     LT.mostrar();
-    r = resolverSistema(LT, y);
+    r = resolverSistemaParaAdelante(LT, y);
   }
 
   if (method == 2) {
@@ -149,7 +170,6 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
   return 0;
 }
-
 
 int main(int argc, char** argv) {
   std::string fileTestData(argv[1]);
