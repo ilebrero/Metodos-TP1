@@ -34,6 +34,13 @@ void combLineal(Matriz &m, int j, float k, int i){ //E_j = E_j - k*E_i
   for(int t = 0; t < m.dimensionColumnas(); ++t) m[j][t] = m[j][t] - k*m[i][t]; 
 }
 
+void combLinealV(vector<float> &b, int j, float k, int i){ //E_j = E_j - k*E_i
+  assert (i < b.size());
+  assert (j < b.size());
+  
+  for(int t = 0; t < b.size(); ++t) b[j][t] = b[j][t] - k*b[i][t]; 
+}
+
 void permutar(Matriz &m, int i, int j){ //permuta fila i con j
   assert (i < m.dimensionFilas());
   assert (j < m.dimensionFilas());
@@ -54,6 +61,7 @@ void gauss(Matriz& m) {
       if(m[i][i] != 0){
         float k = m[j][i]/m[i][i];
         combLineal(m, j, k, i); //fila j - k * fila i
+        combLinealV(b, j, k, i);
       } else {
         permutar(m, i, i+1);
       }
@@ -62,7 +70,7 @@ void gauss(Matriz& m) {
 }
 
 
-Matriz gaussLU(Matriz& m) { //devuelve matriz L
+Matriz gaussLU(Matriz& m, vector<float>& b) { //devuelve matriz L
   int n = m.dimensionFilas();
   Matriz res = Matriz(n, m.dimensionColumnas()); // res = L
   
@@ -75,6 +83,7 @@ Matriz gaussLU(Matriz& m) { //devuelve matriz L
       if(m[i][i] != 0){
         float k = m[j][i]/m[i][i];
         combLineal(m, j, k, i); //fila j - k * fila i
+        combLinealV(b, j, k, i);
         res[j][i] = k; //completo matriz L
       } else {
         permutar(m, i, i+1); //creo que no entra en este caso. VER
@@ -98,6 +107,7 @@ void test_gaussLU(Matriz& m) { //no es exactamente 0
   lu.mostrar();
 }
 
+/*
 int main(int arc, char** argv) {  
   
   std::string fileTestData(argv[1]);
@@ -109,3 +119,4 @@ int main(int arc, char** argv) {
    
   return 0;
 }
+*/
