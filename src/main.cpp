@@ -1,82 +1,14 @@
 #include "clases/Matriz.h"
 #include "clases/MatrizSimetrica.h"
+//#include "crearTests/crearTests.cpp" Incluir en caso de querer crear matrices de esta manera
 #include "factorizacion/gauss.cpp"
 #include "factorizacion/cholesky.cpp"
+#include "factorizacion/resolucionSistema.cpp"
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <vector>
-
-//Matriz crearMatriz(std::string file){ //en la primer línea #filas #columnas y después la matriz
-//  std::string line;
-//  std::ifstream fileData (file.c_str());
-//
-//  getline(fileData, line);
-//  std::istringstream iss(line);
-//  int filas, columnas;
-//  iss >> filas;
-//  iss >> columnas;
-//
-//  Matriz res(filas, columnas);
-//
-//  for(int i = 0; i < filas; ++i){
-//    getline(fileData, line);
-//    std::istringstream iss(line);
-//    for(int j = 0; j < columnas; ++j){
-//      iss >> res[i][j];
-//    }
-//  }
-//
-//  res.mostrar();
-//
-//}
-
-std::vector<float> resolverSistemaParaAdelante(Matriz& m, vector<float>& b) { //m diagonalizada, inversible 
-  assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
-  
-  vector<float> res (b.size());
-
-  int n = m.dimensionFilas();
-  int k = m.dimensionColumnas();
-
-  float aux;
-
-  for(int i = 0; i < n; ++i){
-    aux = 0;
-    for (int j = 0; j < k-1; ++j){
-      aux = aux + m[i][j] * res[j];
-    }
-    res[i] = (b[i] - aux) / m[i][i]; //m[i][i] != 0 si m inversible
-  }
-  return res;
-}
-
-std::vector<float> resolverSistemaParaAtras(Matriz& m, vector<float>& b) { //m diagonalizada, inversible
-  assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
-  
-  vector<float> res (b.size());
-
-  int n = m.dimensionFilas();
-  int k = m.dimensionColumnas();
-
-  float aux;
-
-  for(int i = n-1; i >= 0; --i){
-    aux = 0;
-    for (int j = k-1; j > i; --j){
-      aux = aux + m[i][j] * res[j];
-    }
-    res[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
-  }
-  return res;
-}
-
-std::vector<float> multiplicarVectorIncognita(Matriz& m) {
-  vector<float> res (m.dimensionColumnas());
-     
-
-}
 
 int evaluarTests(std::string fileTestData, std::string fileTestResult, int method) {
   std::string line;
@@ -128,37 +60,9 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
   }
 
-
   Matriz L(cantEquipos, cantEquipos);
   std::vector<float> r;
   std::vector<float> y;
-
-
-
-  if (method == 0) {
-    for (int i = 0 ; i < cantEquipos ; ++i) {
-      C[i][i] = 2 + w[i] + l[i];
-      b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
-    }
-
-    gauss(C, b);
-    r = resolverSistemaParaAtras(C, b);
-  }
-
-  if (method == 1) {
-    for (int i = 0 ; i < cantEquipos ; ++i) {
-      C[i][i] = 2 + w[i] + l[i];
-      b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
-    }
-    
-    L = cholesky(C);
-    Matriz LT = L;
-    LT.transponer();
-
-    y = resolverSistemaParaAtras(L, b);
-    LT.mostrar();
-    r = resolverSistemaParaAdelante(LT, y);
-  }
 
   if (method == 2) {
     for (int i = 0 ; i < cantEquipos ; ++i) {
@@ -166,8 +70,46 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
       b[i] = w[i] / (w[i] + l[i]); 
     }
 
-    // Aca se llama tanto a cholesky como a gauss?
-    
+  } else {
+    for (int i = 0 ; i < cantEquipos ; ++i) {
+      C[i][i] = 2 + w[i] + l[i];
+      b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
+    }
+  }
+
+  switch(method) {
+    case 0: {
+      gauss(C, b);
+      C.mostrar();
+      r = resolverSistemaParaAtras(C, b);
+      break;
+    }
+    case 1: {
+      L = cholesky(C);
+      Matriz LT = L;
+      LT.transponer();
+
+      y = resolverSistemaParaAdelante(L, b);
+      r = resolverSistemaParaAtras(LT, y);
+      break;
+    }
+    case 2: {
+      std::cout << "elegite una papu" << std::endl;
+      break;
+    }
+    /*
+      gauss(C, b);
+      C.mostrar();
+      r = resolverSistemaParaAtras(C, b);
+    */
+    /*
+      L = cholesky(C);
+      Matriz LT = L;
+      LT.transponer();
+
+      y = resolverSistemaParaAdelante(L, b);
+      r = resolverSistemaParaAtras(LT, y);
+    */
   }
 
   for (int i = 0 ; i < cantEquipos ; ++i) {
@@ -190,22 +132,3 @@ int main(int argc, char** argv) {
 
   return 0;
 }
-/*
-  std::cout << "------------------------------------------" << std::endl;
-  C.mostrar();
-  std::cout << "------------------------------------------" << std::endl;
-
-  
-  for (int i = 0 ; i < cantEquipos ; ++i) {
-    std::cout << "b[ " << i << " ] = " << std::fixed  << b[i] << std::endl; 
-  }
-
-
-  for (int i = 0 ; i < cantEquipos ; ++i) {
-    std::cout << "w[ " << i << " ] = " << std::fixed  << w[i] << std::endl; 
-  }
-
-  for (int i = 0 ; i < cantEquipos ; ++i) {
-    std::cout << "l[ " << i << " ] = " << std::fixed  << l[i] << std::endl; 
-  }
-*/
