@@ -32,7 +32,7 @@
 //
 //}
 
-std::vector<float> resolverSistemaParaAdelante(Matriz& m, vector<float>& b) { //m diagonalizada, 
+std::vector<float> resolverSistemaParaAdelante(Matriz& m, vector<float>& b) { //m diagonalizada, inversible 
   assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
   
   vector<float> res (b.size());
@@ -47,12 +47,12 @@ std::vector<float> resolverSistemaParaAdelante(Matriz& m, vector<float>& b) { //
     for (int j = 0; j < k-1; ++j){
       aux = aux + m[i][j] * res[j];
     }
-    res[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
+    res[i] = (b[i] - aux) / m[i][i]; //m[i][i] != 0 si m inversible
   }
   return res;
 }
 
-std::vector<float> resolverSistemaParaAtras(Matriz& m, vector<float>& b) { //m diagonalizada, 
+std::vector<float> resolverSistemaParaAtras(Matriz& m, vector<float>& b) { //m diagonalizada, inversible
   assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
   
   vector<float> res (b.size());
@@ -70,6 +70,12 @@ std::vector<float> resolverSistemaParaAtras(Matriz& m, vector<float>& b) { //m d
     res[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
   }
   return res;
+}
+
+std::vector<float> multiplicarVectorIncognita(Matriz& m) {
+  vector<float> res (m.dimensionColumnas());
+     
+
 }
 
 int evaluarTests(std::string fileTestData, std::string fileTestResult, int method) {
