@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iostream>
 
-#define EPSILON 1.19e-7f
+#define EPSILON 1.19e-4f
 
 bool igualdadConTolerancia(float a, float b) {
   if (a - b < EPSILON) {
@@ -65,8 +65,7 @@ void gauss(Matriz& m, vector<float>& b) {
 }
 
 //gauss con cálculo de matriz LU
-Matriz gaussLU(Matriz& m, vector<float>& b) { //devuelve matriz L
-  assert (m.dimensionColumnas() == b.size());
+Matriz gaussLU(Matriz& m) { //devuelve matriz L
 
   int n = m.dimensionFilas();
   Matriz res = Matriz(n, m.dimensionColumnas()); // res = L
@@ -75,13 +74,13 @@ Matriz gaussLU(Matriz& m, vector<float>& b) { //devuelve matriz L
     res[k][k] = 1;
   }
   
-  for(int i = 0; i < n-1; ++i){
+
+  for(int i = 0; i < n; ++i){
     for(int j = i+1; j < n; ++j){
 
-      if( !igualdadConTolerancia(m[i][i], 0) ){
+      if( m[i][i] != 0){ //cambiar por tolerancia!!!!
         float k = m[j][i]/m[i][i];
         combLineal(m, j, k, i); //fila j - k * fila i
-        combLinealV(b, j, k, i);
         res[j][i] = k; //completo matriz L
       } else {
         permutar(m, i, i+1); //creo que no entra en este caso. VER
@@ -92,9 +91,8 @@ Matriz gaussLU(Matriz& m, vector<float>& b) { //devuelve matriz L
   return res;
 }
 
-/*
-void test_gauss(Matriz& m) { 
-  gauss(m);
+void test_gauss(Matriz& m, vector<float>& b) { 
+  gauss(m, b);
   std::cout << "La matriz diagonalizada es: " << std::endl; 
   m.mostrar();
 }
@@ -106,14 +104,15 @@ void test_gaussLU(Matriz& m) {
   std::cout << "La matriz LU es: " << std::endl; 
   lu.mostrar();
 }
-
+/*
 int main(int arc, char** argv) {  
   
   std::string fileTestData(argv[1]);
   std::cout << "La matriz original es: " << std::endl; 
   Matriz m = crearMatriz(fileTestData);
+  vector<float> v(3);
   m.mostrar();
-  //test_gauss(m);
+  //test_gauss(m,v);
   test_gaussLU(m);
    
   return 0;

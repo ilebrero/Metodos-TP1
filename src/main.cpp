@@ -66,28 +66,40 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
   if (method == 2) {
     for (int i = 0 ; i < cantEquipos ; ++i) {
-      C[i][i] = 2 + w[i] + l[i];
+      C[i][i] = 2.0 + w[i] + l[i];
       b[i] = w[i] / (w[i] + l[i]); 
     }
 
   } else {
     for (int i = 0 ; i < cantEquipos ; ++i) {
-      C[i][i] = 2 + w[i] + l[i];
+      C[i][i] = 2.0 + w[i] + l[i];
       b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
     }
   }
 
   switch(method) {
     case 0: {
-      gauss(C, b);
-      C.mostrar();
-      r = resolverSistemaParaAtras(C, b);
+     // gauss(C, b);
+     // C.mostrar();
+     // r = resolverSistemaParaAtras(C, b);
+
+      L = gaussLU(C);
+
+      y = resolverSistemaParaAdelante(L, b);
+      r = resolverSistemaParaAtras(C, y); //C=U
+
       break;
     }
     case 1: {
       L = cholesky(C);
       Matriz LT = L;
       LT.transponer();
+
+      L.mostrar();
+      std::cout << "--------------" << std::endl;
+      LT.mostrar();
+      
+
 
       y = resolverSistemaParaAdelante(L, b);
       r = resolverSistemaParaAtras(LT, y);
