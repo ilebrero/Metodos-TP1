@@ -16,7 +16,7 @@ bool igualdadConTolerancia(float a, float b) {
 }
 
 //combinación lineal de filas de una matriz
-void combLineal(Matriz &m, int j, float k, int i){ //E_j = E_j - k*E_i
+void combLineal(Matriz &m, int j, float k, int i){ //E_j = E_j - k*E_i, O(m.dimensionColumnas())
   assert (i < m.dimensionFilas());
   assert (j < m.dimensionFilas());
   
@@ -47,6 +47,7 @@ void permutar(Matriz &m, int i, int j){ //permuta fila i con j
 //gaus sin calcular matriz LU
 void gauss(Matriz& m, vector<float>& b) {
   assert (m.dimensionColumnas() == b.size());
+  init_time();
 
   int n = m.dimensionFilas();
   for(int i = 0; i < n; ++i){
@@ -62,11 +63,12 @@ void gauss(Matriz& m, vector<float>& b) {
     
     }
   }
+  acum += get_time();
 }
 
 //gauss con cálculo de matriz LU
 Matriz gaussLU(Matriz& m) { //devuelve matriz L
-
+  init_time();
   int n = m.dimensionFilas();
   Matriz res = Matriz(n, m.dimensionColumnas()); // res = L
   
@@ -88,6 +90,7 @@ Matriz gaussLU(Matriz& m) { //devuelve matriz L
     
     }
   }
+  acum += get_time();
   return res;
 }
 
