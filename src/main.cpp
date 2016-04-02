@@ -92,14 +92,20 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
   switch(method) {
     case 0: {
+
+      init_time();
+      /* eliminación gaussiana */      
      // gauss(C, b);
      // C.mostrar();
      // r = resolverSistemaParaAtras(C, b);
-
+      
+      /* eliminación gaussiana con factorización LU */
       L = gaussLU(C);
 
       y = resolverSistemaParaAdelante(L, b);
       r = resolverSistemaParaAtras(C, y); //C=U
+      
+      acum += get_time();
 
       break;
     }
