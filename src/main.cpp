@@ -9,6 +9,19 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <sys/time.h>
+
+timeval sstart, eend;
+double acum = 0;
+
+void init_time() {
+  gettimeofday(&sstart, NULL);
+}
+
+double get_time() {
+  gettimeofday(&eend, NULL);
+  return (1000000*(eend.tv_sec-sstart.tv_sec) + (eend.tv_usec-sstart.tv_usec))/1000000.0;
+}
 
 int evaluarTests(std::string fileTestData, std::string fileTestResult, int method) {
   std::string line;
@@ -91,18 +104,15 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
       break;
     }
     case 1: {
+      init_time();
       L = cholesky(C);
       Matriz LT = L;
       LT.transponer();
 
-      L.mostrar();
-      std::cout << "--------------" << std::endl;
-      LT.mostrar();
-      
-
-
       y = resolverSistemaParaAdelante(L, b);
       r = resolverSistemaParaAtras(LT, y);
+      acum += get_time();
+      std::cout << std::fixed << acum << std::endl;
       break;
     }
     case 2: {
