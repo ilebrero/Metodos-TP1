@@ -1,30 +1,29 @@
 #include "../clases/Matriz.h"
 #include <math.h>
 
-Matriz& cholesky(Matriz &m) {
+void cholesky(Matriz &m, Matriz &L) {
   int n = m.dimensionFilas();
-  Matriz *L = new Matriz(n, n); 
-  (*L)[0][0] = (float)sqrt(m[0][0]);
+  L[0][0] = (float)sqrt(m[0][0]);
 
   for (int j = 1 ; j < n ; ++j)
-    (*L)[j][0] = m[j][0] / (*L)[0][0];
+    L[j][0] = m[j][0] / L[0][0];
 
   for (int i = 1 ; i < n - 1 ; ++i) {
     float auxL = m[i][i];
 
     for (int k = 0 ; k < i ; ++k) {
-      auxL -= ((*L)[i][k] * (*L)[i][k]);
+      auxL -= (L[i][k] * L[i][k]);
     }
 
-    (*L)[i][i] = (float)sqrt(auxL);
+    L[i][i] = (float)sqrt(auxL);
 
     for (int j = i+1 ; j < n ; ++j) { //(*L)a matriz es cuadrada así que n = columnas
       float auxL = m[j][i];
 
       for (int k = 0 ; k < i ; ++k)
-        auxL -= ((*L)[j][k] * (*L)[i][k]);
+        auxL -= (L[j][k] * L[i][k]);
 
-    (*L)[j][i] = auxL / (*L)[i][i];
+    L[j][i] = auxL / L[i][i];
     
     }
 
@@ -33,12 +32,10 @@ Matriz& cholesky(Matriz &m) {
   float auxL = m[n-1][n-1];
 
   for (int k = 0 ; k < n - 1 ; ++k) {
-    auxL -= ((*L)[n-1][k] * (*L)[n-1][k]);
+    auxL -= (L[n-1][k] * L[n-1][k]);
   }
 
-  (*L)[n-1][n-1] = (float)sqrt(auxL);
-
-  return *L;
+  L[n-1][n-1] = (float)sqrt(auxL);
 
 }
 /*

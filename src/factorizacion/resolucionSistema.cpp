@@ -6,11 +6,9 @@
 #include <iostream>
 #include <vector>
 
-std::vector<float> resolverSistemaParaAdelante(Matriz& m, vector<float>& b) { //m diagonalizada, inversible 
+void resolverSistemaParaAdelante(Matriz& m, vector<float>& b, vector<float>& y) { //m diagonalizada, inversible 
   assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
   
-  vector<float> res (b.size());
-
   int n = m.dimensionFilas();
   int k = m.dimensionColumnas();
 
@@ -19,18 +17,16 @@ std::vector<float> resolverSistemaParaAdelante(Matriz& m, vector<float>& b) { //
   for(int i = 0; i < n; ++i){
     aux = 0;
     for (int j = 0; j < i ; ++j){
-      aux = aux + m[i][j] * res[j];
+      aux = aux + m[i][j] * y[j];
     }
-    res[i] = (b[i] - aux) / m[i][i]; //m[i][i] != 0 si m inversible
+    y[i] = (b[i] - aux) / m[i][i]; //m[i][i] != 0 si m inversible
   }
-  return res;
+
 }
 
-std::vector<float> resolverSistemaParaAtras(Matriz& m, vector<float>& b) { //m diagonalizada, inversible
+void resolverSistemaParaAtras(Matriz& m, vector<float>& b, vector<float>& y) { //m diagonalizada, inversible
   assert (m.dimensionColumnas() == b.size()); //condición necesaria para la multiplicación
   
-  vector<float> res (b.size());
-
   int n = m.dimensionFilas();
   int k = m.dimensionColumnas();
 
@@ -39,11 +35,11 @@ std::vector<float> resolverSistemaParaAtras(Matriz& m, vector<float>& b) { //m d
   for(int i = n-1; i >= 0; --i){
     aux = 0;
     for (int j = k-1; j > i; --j){
-      aux = aux + m[i][j] * res[j];
+      aux = aux + m[i][j] * y[j];
     }
-    res[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
+    y[i] = (b[i] - aux) / m[i][i]; //siempre va a estar definido ?
   }
-  return res;
+
 }
 /* Esto se usa para algo?
 std::vector<float> multiplicarVectorIncognita(Matriz& m) {
