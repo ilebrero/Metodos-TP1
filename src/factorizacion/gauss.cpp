@@ -47,51 +47,39 @@ void permutar(Matriz &m, int i, int j){ //permuta fila i con j
 //gaus sin calcular matriz LU
 void gauss(Matriz& m, vector<float>& b) {
   assert (m.dimensionColumnas() == b.size());
-  init_time();
 
   int n = m.dimensionFilas();
   for(int i = 0; i < n; ++i){
     for(int j = i+1; j < n; ++j){
  
-      if( !igualdadConTolerancia(m[i][i], 0) ){
-        float k = m[j][i]/m[i][i];
-        combLineal(m, j, k, i); //fila j - k * fila i
-        combLinealV(b, j, k, i);
-      } else {
-        permutar(m, i, i+1);
-      }
+      float k = m[j][i]/m[i][i];
+      combLineal(m, j, k, i); //fila j - k * fila i
+      combLinealV(b, j, k, i);
     
     }
   }
-  acum += get_time();
 }
 
 //gauss con cálculo de matriz LU
-Matriz gaussLU(Matriz& m) { //devuelve matriz L
-  init_time();
+void gaussLU(Matriz& m, Matriz& L) { //devuelve matriz L
   int n = m.dimensionFilas();
-  Matriz res = Matriz(n, m.dimensionColumnas()); // res = L
-  
-  for(int k = 0; k < n; ++k){ //completo con 1 en la diagonal de L
-    res[k][k] = 1;
-  }
-  
 
   for(int i = 0; i < n; ++i){
-    for(int j = i+1; j < n; ++j){
+    for(int j = i; j < n; ++j){
 
-      if( m[i][i] != 0){ //cambiar por tolerancia!!!!
+      if (j == i) {
+
+        L[j][j] = 1; 
+
+      } else {
+
         float k = m[j][i]/m[i][i];
         combLineal(m, j, k, i); //fila j - k * fila i
-        res[j][i] = k; //completo matriz L
-      } else {
-        permutar(m, i, i+1); //creo que no entra en este caso. VER
+        L[j][i] = k; //completo matriz L
       }
-    
+
     }
   }
-  acum += get_time();
-  return res;
 }
 
 void test_gauss(Matriz& m, vector<float>& b) { 
@@ -101,7 +89,8 @@ void test_gauss(Matriz& m, vector<float>& b) {
 }
 
 void test_gaussLU(Matriz& m) { 
-  Matriz lu = gaussLU(m);
+  Matriz lu(m.dimensionFilas(), m.dimensionColumnas());
+  gaussLU(m, lu);
   std::cout << "La matriz diagonalizada es: " << std::endl; 
   m.mostrar();
   std::cout << "La matriz LU es: " << std::endl; 

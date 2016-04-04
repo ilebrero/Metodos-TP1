@@ -1,0 +1,6 @@
+equipo: 0 ranking: 0.359707
+equipo: 1 ranking: 0.615978
+equipo: 2 ranking: 0.668661
+equipo: 3 ranking: 0.314936
+equipo: 4 ranking: 0.501544
+equipo: 5 ranking: 0.539174

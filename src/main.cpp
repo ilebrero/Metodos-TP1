@@ -23,6 +23,23 @@ double get_time() {
   return (1000000*(eend.tv_sec-sstart.tv_sec) + (eend.tv_usec-sstart.tv_usec))/1000000.0;
 }
 
+void sort(vector<float>& a, vector<int>& b) {
+  for (int i = 0; i < a.size() - 1; ++i) {
+    for (int j = 0; j < a.size() - i - 1; ++j) {
+      if (a[j] < a[j+1]) {
+        float auxA = a[j];
+        int auxB = b[j];
+
+        a[j] = a[j+1];
+        b[j] = b[j+1];
+
+        a[j+1] = auxA;
+        b[j+1] = auxB;
+      }
+    }
+  }
+}
+
 int evaluarTests(std::string fileTestData, std::string fileTestResult, int method) {
   std::string line;
   std::ifstream fileData (fileTestData.c_str());
@@ -31,117 +48,116 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
   std::string res;
   int cantEquipos;
   int cantPartidos;
-
-  getline(fileData, line);
-  std::istringstream iss(line);
-  iss >> cantEquipos;
-  iss >> cantPartidos;
-  Matriz C(cantEquipos, cantEquipos);
-  vector<int> w(cantEquipos, 0); // Cada posición tiene el numero de partidos ganados por el equipo i
-  vector<int> l(cantEquipos, 0); // Cada posición tiene el numero de partidos perdidos por el equipo i
-  vector<float> b(cantEquipos, 0); // Vector del sistema Cr = b
+  int z = 0;
 
   while (getline (fileData, line)) {
 
     std::istringstream iss(line);
+    iss >> cantEquipos;
+    iss >> cantPartidos;
+    Matriz C(cantEquipos, cantEquipos);
+    vector<int> w(cantEquipos, 0); // Cada posición tiene el numero de partidos ganados por el equipo i
+    vector<int> l(cantEquipos, 0); // Cada posición tiene el numero de partidos perdidos por el equipo i
+    vector<float> b(cantEquipos, 0); // Vector del sistema Cr = b
 
-    std::string fecha;
-    int equipo1;
-    int equipo2;
-    int golesEquipo1;
-    int golesEquipo2;
+    for (int k = 0; k < cantPartidos; ++k) {
+    
+      getline (fileData, line);
 
-    iss >> fecha;
-    iss >> equipo1;
-    iss >> golesEquipo1;
-    iss >> equipo2;
-    iss >> golesEquipo2;
+      std::istringstream iss(line);
 
-    equipo1 -= 1;
-    equipo2 -= 1;
+      std::string fecha;
+      int equipo1;
+      int equipo2;
+      int golesEquipo1;
+      int golesEquipo2;
 
-    if (golesEquipo1 > golesEquipo2) { // Gano el equipo 1
-      w[equipo1]++;
-      l[equipo2]++;
-    } else {
-      w[equipo2]++;
-      l[equipo1]++;
+      iss >> fecha;
+      iss >> equipo1;
+      iss >> golesEquipo1;
+      iss >> equipo2;
+      iss >> golesEquipo2;
+
+      equipo1 -= 1;
+      equipo2 -= 1;
+
+      if (golesEquipo1 > golesEquipo2) { // Gano el equipo 1
+        w[equipo1]++;
+        l[equipo2]++;
+      } else {
+        w[equipo2]++;
+        l[equipo1]++;
+      }
+
+      C[equipo1][equipo2]--;
+      C[equipo2][equipo1]--;
+
     }
 
-    C[equipo1][equipo2]--;
-    C[equipo2][equipo1]--;
+    std::vector<float> r(cantEquipos, 0);
+    std::vector<float> y(cantEquipos, 0);
 
-  }
-
-  Matriz L(cantEquipos, cantEquipos);
-  std::vector<float> r;
-  std::vector<float> y;
-
-  if (method == 2) {
-    for (int i = 0 ; i < cantEquipos ; ++i) {
-      C[i][i] = 2.0 + w[i] + l[i];
-      b[i] = w[i] / (w[i] + l[i]); 
-    }
-
-  } else {
     for (int i = 0 ; i < cantEquipos ; ++i) {
       C[i][i] = 2.0 + w[i] + l[i];
       b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
     }
-  }
 
-  switch(method) {
-    case 0: {
+    Matriz L(cantEquipos, cantEquipos);
 
-      init_time();
-      /* eliminación gaussiana */      
-     // gauss(C, b);
-     // C.mostrar();
-     // r = resolverSistemaParaAtras(C, b);
-      
-      /* eliminación gaussiana con factorización LU */
-      L = gaussLU(C);
+    switch(method) {
+      case 0: {
 
-      y = resolverSistemaParaAdelante(L, b);
-      r = resolverSistemaParaAtras(C, y); //C=U
-      
-      acum += get_time();
+          /* eliminación gaussiana */      
+          //gauss(C, b);
+          //resolverSistemaParaAtras(C, b, r);
+          
+          /* eliminación gaussiana con factorización LU */
+          
+        gaussLU(C, L);
 
-      break;
+        resolverSistemaParaAdelante(L, b, y);
+        resolverSistemaParaAtras(C, y, r); //C=U
+
+        break;
+      }
+      case 1: {
+
+          cholesky(C, L);
+          Matriz LT = L;
+          LT.transponer();
+
+          resolverSistemaParaAdelante(L, b, y);
+          resolverSistemaParaAtras(LT, y, r);
+
+        break;
+      }
+      case 2: {
+        for (int i = 0 ; i < cantEquipos ; ++i) {
+          b[i] = w[i] / (w[i] + l[i]); 
+          fileWrite << std::fixed << b[i] << std::endl;
+        }
+       
+        break;
+      }
+      case 3: {
+        break;
+              
+       }
+      case 4: {
+        break;
+              }
+      case 5: {
+        break;
+              }
+
     }
-    case 1: {
-      init_time();
-      L = cholesky(C);
-      Matriz LT = L;
-      LT.transponer();
 
-      y = resolverSistemaParaAdelante(L, b);
-      r = resolverSistemaParaAtras(LT, y);
-      acum += get_time();
-      std::cout << std::fixed << acum << std::endl;
-      break;
-    }
-    case 2: {
-      std::cout << "elegite una papu" << std::endl;
-      break;
-    }
-    /*
-      gauss(C, b);
-      C.mostrar();
-      r = resolverSistemaParaAtras(C, b);
-    */
-    /*
-      L = cholesky(C);
-      Matriz LT = L;
-      LT.transponer();
+    //for (int i = 0 ; i < cantEquipos ; ++i) {
+    //  fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
+    //}
+    ++z;
+    std::cout << z << std::endl;
 
-      y = resolverSistemaParaAdelante(L, b);
-      r = resolverSistemaParaAtras(LT, y);
-    */
-  }
-
-  for (int i = 0 ; i < cantEquipos ; ++i) {
-    fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
   }
 
   return 0;
@@ -160,3 +176,86 @@ int main(int argc, char** argv) {
 
   return 0;
 }
+
+
+/* ESTO ES DE CHACHO */
+                /*
+                 *
+          vector<int> equipos(cantEquipos);
+
+          for (int i = 0; i < cantEquipos; ++i)
+            equipos[i] = i;
+
+          sort(r, equipos);
+
+          for (int j = 0 ; j < cantEquipos ; ++j) {
+            if (equipos[j] >= 10) {
+              fileWrite << "equipo: " << equipos[j] << " | ranking: " << std::fixed << r[j]; 
+            } else {
+              fileWrite << "equipo: " << equipos[j] << "  | ranking: " << std::fixed << r[j]; 
+            }
+            fileWrite << " | ganados: " << std::fixed << w[equipos[j]]; 
+            fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
+          }
+          std::cout << "hola escribi aclgo" << std::endl;
+                 *
+    std::vector<float> r2(cantEquipos, 0);
+    std::vector<float> y2(cantEquipos, 0);
+    Matriz C2(cantEquipos, cantEquipos);
+    vector<float> b2(cantEquipos, cantEquipos);
+
+        int cantResultados = 50;
+        while (cantResultados <= 1000) {
+          C2 = C;
+          y2 = y;
+          r2 = r;
+
+          for (int k = 0; k < 5; ++k) {
+            init_time();
+
+            cholesky(C2, L);
+            Matriz LT = L;
+            LT.transponer();
+
+            for (int z = 0; z < cantResultados; ++z) {
+              b2 = b;
+
+            resolverSistemaParaAdelante(L, b2, y2);
+            resolverSistemaParaAtras(LT, y2, r2);
+            }
+          acum += get_time();
+          }
+        acum /= 5;
+        fileWrite << std::fixed << acum << std::endl; 
+        acum = 0;
+        std::cout << cantResultados << std::endl;
+        cantResultados += 50;
+        }*/
+
+        /*
+        int cantResultados = 100;
+
+          for (int k = 0; k < 10; ++k) {
+            C2 = C;
+            y2 = y;
+            r2 = r;
+
+            init_time();
+
+            cholesky(C2, L);
+            Matriz LT = L;
+            LT.transponer();
+
+            for (int z = 0; z < cantResultados; ++z) {
+              b2 = b;
+
+            resolverSistemaParaAdelante(L, b2, y2);
+            resolverSistemaParaAtras(LT, y2, r2);
+            }
+          acum += get_time();
+          }
+        acum /= 10;
+        fileWrite << std::fixed << acum << std::endl; 
+        acum = 0;
+        std::cout << cantResultados << std::endl;
+*/
