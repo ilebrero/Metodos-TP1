@@ -14,16 +14,16 @@ y_LU = []
 y_cholesky = []
           
 #valores primer funcion
-#f = open('../resultadosTiempos/tiemposGaussVariandoB.txt', 'r')
-#for i in range(0,20):
-#  y_gauss.append(float(f.readline()[:-1]))
+f = open('../resultadosTiempos/tiemposGaussVariandoB.txt', 'r')
+for i in range(0,20):
+  y_gauss.append(float(f.readline()[:-1]))
 
 #valores segunda funcion
-f = open('../resultadosTiempos/tiemposLUVariando3.txt', 'r')
+f = open('../resultadosTiempos/tiemposLUVariandoRyM.txt', 'r')
 for i in range(0,20):
   y_LU.append(float(f.readline()[:-1]))
 
-f = open('../resultadosTiempos/tiemposCholeskyVariando3.txt', 'r')
+f = open('../resultadosTiempos/tiemposCholeskyVariandoRyM.txt', 'r')
 for i in range(0,20):
   y_cholesky.append(float(f.readline()[:-1]))
 
@@ -33,7 +33,7 @@ for i in range(0,20):
 #print len(y_cholesky)
 #print len(x)
 #print len(y_cholesky)
-#plt.plot(x,y_gauss,'ro', color='blue', label="Gauss variando partidos")
+plt.plot(x,y_gauss,'ro', color='blue', label="Gauss variando vector resultado")
 plt.plot(x,y_LU,'ro', color='green', label="LU variando vector resultado")
 plt.plot(x,y_cholesky,'ro', color='red', label="Cholesky variando vector resultado")
 

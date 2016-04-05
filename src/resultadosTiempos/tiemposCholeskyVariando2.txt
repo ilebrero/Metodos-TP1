@@ -1,0 +1,40 @@
+primer tiempo: 0.321525
+0.134045
+primer tiempo: 0.321750
+0.268019
+primer tiempo: 0.321630
+0.402129
+primer tiempo: 0.321492
+0.536254
+primer tiempo: 0.321675
+0.670327
+primer tiempo: 0.323190
+0.809774
+primer tiempo: 0.321918
+0.940497
+primer tiempo: 0.322075
+1.075786
+primer tiempo: 0.321573
+1.206515
+primer tiempo: 0.321093
+1.339926
+primer tiempo: 0.321196
+1.473875
+primer tiempo: 0.321036
+1.607937
+primer tiempo: 0.321069
+1.741939
+primer tiempo: 0.321054
+1.880692
+primer tiempo: 0.322290
+2.015306
+primer tiempo: 0.321397
+2.143945
+primer tiempo: 0.321780
+2.279084
+primer tiempo: 0.321720
+2.413106
+primer tiempo: 0.321736
+2.547305
+primer tiempo: 0.321834
+2.680837
