@@ -11,6 +11,9 @@ all: $(BINARIES)
 main: main.cpp
 	$(CC) main.cpp clases/Matriz.cpp clases/MatrizSimetrica.cpp $(CFLAGS) main
 
+minimizar: minimizar.cpp
+	$(CC) minimizar.cpp clases/Matriz.cpp clases/MatrizSimetrica.cpp $(CFLAGS) minimizar
+
 matriz: clases/Matriz.cpp
 	$(CC) clases/Matriz.cpp $(CFLAGS) matriz
 

@@ -38,6 +38,45 @@ void cholesky(Matriz &m, Matriz &L) {
   L[n-1][n-1] = (float)sqrt(auxL);
 
 }
+
+void choleskySimetrico(Matriz &m, MatrizSimetrica &L) {
+  int n = m.dimensionFilas();
+  L.set(0, 0, (float)sqrt(m[0][0]));
+
+  for (int j = 1 ; j < n ; ++j)
+    L.set(j, 0,  (m[j][0] / L.get(0, 0)));
+
+  for (int i = 1 ; i < n - 1 ; ++i) {
+    float auxL = m[i][i];
+
+    for (int k = 0 ; k < i ; ++k) {
+      auxL -= (L.get(i, k) * L.get(i, k));
+    }
+
+    L.set(i, i, (float)sqrt(auxL));
+
+    for (int j = i+1 ; j < n ; ++j) { //(*L)a matriz es cuadrada así que n = columnas
+      float auxL = m[j][i];
+
+      for (int k = 0 ; k < i ; ++k)
+        auxL -= (L.get(j, k) * L.get(i, k));
+
+    L.set(j, i, auxL / L.get(i, i));
+    
+    }
+
+  }
+
+  float auxL = m[n-1][n-1];
+
+  for (int k = 0 ; k < n - 1 ; ++k) {
+    auxL -= (L.get(n-1, k) * L.get(n-1, k));
+  }
+
+  L.set(n-1, n-1,  (float)sqrt(auxL));
+
+}
+
 /*
 int main() {
   Matriz m(3, 3);

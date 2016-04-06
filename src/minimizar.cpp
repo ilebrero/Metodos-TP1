@@ -23,6 +23,23 @@ double get_time() {
   return (1000000*(eend.tv_sec-sstart.tv_sec) + (eend.tv_usec-sstart.tv_usec))/1000000.0;
 }
 
+void sort(vector<float>& a, vector<int>& b) {
+  for (int i = 0; i < a.size() - 1; ++i) {
+    for (int j = 0; j < a.size() - i - 1; ++j) {
+      if (a[j] < a[j+1]) {
+        float auxA = a[j];
+        int auxB = b[j];
+
+        a[j] = a[j+1];
+        b[j] = b[j+1];
+
+        a[j+1] = auxA;
+        b[j+1] = auxB;
+      }
+    }
+  }
+}
+
 int maximo(vector<float>& a) {
   int max = 0;
   int n = a.size();
@@ -110,13 +127,14 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int equip
     int cantidadDePartidos = 0;
     int ganador = maximo(r);
     while (ganador != equipo) {
-      std::cout << ganador << std::endl;
+      //std::cout << "ganador: " << ganador << " ranking " << r[ganador] << " ganadas: " << w[ganador] << " perdidas: " << l[ganador] << std::endl;
+      //std::cout << "equipo: " << equipo << " ranking " << r[equipo] << " ganadas: " << w[equipo] << " perdidas: " << l[equipo]<< std::endl;
       cantidadDePartidos++;
 
       C[ganador][equipo]--;
       C[equipo][ganador]--; // Los hago jugar una vez más
       w[equipo]++; // El equipo que quiero llevar arriba gano
-      l[ganador]--; // El mejor perdio
+      l[ganador]++; // El mejor perdio
       C[equipo][equipo]++;
       C[ganador][ganador]++; // Ambos jugaron un partido más
 
@@ -137,14 +155,23 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int equip
     }
 
     std::cout << "cantidad de partidos: " << cantidadDePartidos << std::endl;
-    for (int i = 0 ; i < cantEquipos ; ++i) {
-      fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
+    vector<int> equipos(cantEquipos);
+
+    for (int i = 0; i < cantEquipos; ++i)
+      equipos[i] = i;
+
+    sort(r, equipos);
+
+    for (int j = 0 ; j < cantEquipos ; ++j) {
+      if (equipos[j] >= 10) {
+        fileWrite << "equipo: " << equipos[j] << " | ranking: " << std::fixed << r[j]; 
+      } else {
+        fileWrite << "equipo: " << equipos[j] << "  | ranking: " << std::fixed << r[j]; 
+      }
+      fileWrite << " | ganados: " << std::fixed << w[equipos[j]]; 
+      fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
     }
-
   }
-
-  ++z;
-  std::cout << z << std::endl;
 
   return 0;
 }
