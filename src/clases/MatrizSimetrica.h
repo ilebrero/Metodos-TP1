@@ -25,10 +25,14 @@ class MatrizSimetrica {
     float get(int, int);
 
     void randomizar(int semilla);
+    void transponer();
     void mostrar();
 
-    int dimensionFilas();
-    int dimensionColumnas();
+    int  dimensionFilas();
+    int  dimensionColumnas();
+    
+    void setTriangular(bool esTriangular);
+    bool esTriangular();
 
   private:
 
@@ -38,6 +42,8 @@ class MatrizSimetrica {
 
     int filas, columnas;
     vector< vector<float> > matriz;
+    bool transpuesta;
+    bool triangular;
 
 	/*******************************
 	 *          Funciones          *

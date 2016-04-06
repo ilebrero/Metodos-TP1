@@ -5,6 +5,8 @@ MatrizSimetrica::MatrizSimetrica(int filas, int columnas) {
   this->columnas = columnas;
   vector< vector<float> > m(filas, vector<float>(filas));
   this->matriz = m;
+  this->transpuesta = false;
+  this->triangular  = false;
 
   for (int i = 0; i < filas; ++i) {
     vector<float> fila(i+1); // <- para la matriz simetrica
@@ -25,14 +27,30 @@ int MatrizSimetrica::dimensionColumnas() {
      *******************************/ 
 
 float MatrizSimetrica::get(int f, int c) {
+  if (transpuesta) {
+    int aux = c;
+    c = f;
+    f = c;
+  } 
+
   if (c <= f) {
     return this->matriz[f][c];
   } else {
-    return this->matriz[c][f];
+    if (this->esTriangular()) {
+      return 0;
+    } else {
+      return this->matriz[c][f];
+    }
   }
 }
 
 void MatrizSimetrica::set(int f, int c, float valor) {
+  if (transpuesta) {
+    int aux = c;
+    c = f;
+    f = c;
+  } 
+  
   if (c <= f) {
     matriz [f][c] = valor;
   }
@@ -103,6 +121,18 @@ void MatrizSimetrica::mostrar() {
 
   cout << endl;
   }
+}
+
+void MatrizSimetrica::setTriangular(bool esTriangular) {
+  triangular = esTriangular;
+}
+
+bool MatrizSimetrica::esTriangular() {
+  return this->triangular;
+}
+
+void MatrizSimetrica::transponer() {
+  transpuesta = !transpuesta;
 }
 
     /*******************************
