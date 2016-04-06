@@ -14,9 +14,9 @@ y_LU = []
 y_cholesky = []
           
 #valores primer funcion
-f = open('../resultadosTiempos/tiemposGaussVariandoB.txt', 'r')
-for i in range(0,20):
-  y_gauss.append(float(f.readline()[:-1]))
+#f = open('../resultadosTiempos/tiemposGaussVariandoB.txt', 'r')
+#for i in range(0,20):
+#  y_gauss.append(float(f.readline()[:-1]))
 
 #valores segunda funcion
 f = open('../resultadosTiempos/tiemposLUVariandoRyM.txt', 'r')
@@ -33,22 +33,22 @@ for i in range(0,20):
 #print len(y_cholesky)
 #print len(x)
 #print len(y_cholesky)
-plt.plot(x,y_gauss,'ro', color='blue', label="Gauss variando vector resultado")
+#plt.plot(x,y_gauss,'ro', color='blue', label="Gauss variando vector resultado")
 plt.plot(x,y_LU,'ro', color='green', label="LU variando vector resultado")
 plt.plot(x,y_cholesky,'ro', color='red', label="Cholesky variando vector resultado")
 
 yfunction = []
 
-#a = 50
-#for m in range(0,20):
-#  if m == 0:
-#    yfunction.append(0)
-#  else:
-#    yfunction.append(0.00004991721*a*a)
-#    a += 50
+a = 50
+for m in range(0,20):
+  if m == 0:
+    yfunction.append(0)
+  else:
+    yfunction.append(0.0000000191721*a*a*a)
+    a += 50
 
 #sin 'ro' lo plotea como una funcion comun, continua
-#plt.plot(x,yfunction, color='purple', label='T(n)=k*(n^2)',linewidth=3)
+plt.plot(x,yfunction, color='purple', label='T(n)=k*(n^3)',linewidth=3)
 plt.legend(bbox_to_anchor=(0.70,1))
 
 #nombre que va en el eje x
