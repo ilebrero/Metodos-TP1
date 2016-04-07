@@ -177,90 +177,26 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
     } else {
         if (method == 2) {
           for (int i = 0 ; i < cantEquipos ; ++i) {
-            r[i] = w[i] + (float)((w[i] + l[i]));
+            r[i] = w[i] / (float)((w[i] + l[i]));
           }
-
-          //int cantidadDePartidos = 0;
-          //int ganador = maximo(r);
-
-          //while (ganador != equipo) {
-          //  cantidadDePartidos++;
-          //  //std::cout << "ganador: " << ganador << " ranking " << r[ganador] << " ganadas: " << w[ganador] << " perdidas: " << l[ganador] << std::endl;
-          //  //std::cout << "equipo: " << equipo << " ranking " << r[equipo] << " ganadas: " << w[equipo] << " perdidas: " << l[equipo]<< std::endl;
-          //  w[equipo]++;
-          //  l[ganador]++;
-
-          //  r[equipo] = 1.0 + (w[equipo] - l[equipo]) / 2.0; 
-          //  r[ganador] = 1.0 + (w[ganador] - l[ganador]) / 2.0; 
-
-          //  ganador = maximo(r);
-          //
-          //}
-
-          //std::cout << "cantidad de partidos: " << cantidadDePartidos << std::endl;
-          vector<int> equipos(cantEquipos);
-
-          for (int i = 0; i < cantEquipos; ++i)
-            equipos[i] = i;
-
-          sort(r, equipos);
-
-          for (int j = 0 ; j < cantEquipos ; ++j) {
-            if (equipos[j] >= 10) {
-              fileWrite << "equipo: " << equipos[j] << " | ranking: " << std::fixed << r[j]; 
-            } else {
-              fileWrite << "equipo: " << equipos[j] << "  | ranking: " << std::fixed << r[j]; 
-            }
-            fileWrite << " | ganados: " << std::fixed << w[equipos[j]]; 
-            fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
-          }
-      
-      } else {
-
-          srand(1);
-          for (int i = 0 ; i < cantEquipos ; ++i) {
-            C[i][i] = 2.0 + w[i] + l[i];
-            b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
-          }
-
-          cholesky(C, L);
-          Matriz LT = L;
-          LT.transponer();
-
-          resolverSistemaParaAdelante(L, b, y);
-          resolverSistemaParaAtras(LT, y, r);
 
           int cantidadDePartidos = 0;
-          int equipoRand;
           int ganador = maximo(r);
+
           while (ganador != equipo) {
+            cantidadDePartidos++;
             //std::cout << "ganador: " << ganador << " ranking " << r[ganador] << " ganadas: " << w[ganador] << " perdidas: " << l[ganador] << std::endl;
             //std::cout << "equipo: " << equipo << " ranking " << r[equipo] << " ganadas: " << w[equipo] << " perdidas: " << l[equipo]<< std::endl;
-            equipoRand = rand() % cantEquipos;
-            cantidadDePartidos++;
+            w[equipo]++;
+            l[ganador]++;
 
-            C[equipoRand][equipo]--;
-            C[equipo][equipoRand]--; // Los hago jugar una vez más
-            w[equipo]++; // El equipo que quiero llevar arriba gano
-            l[equipoRand]++; // El mejor perdio
-            C[equipo][equipo]++;
-            C[equipoRand][equipoRand]++; // Ambos jugaron un partido más
-
-            b[equipo] = 1.0 + (w[equipo] - l[equipo]) / 2.0;
-            b[equipoRand] = 1.0 + (w[equipoRand] - l[equipoRand]) / 2.0; //Actualizo vector resultado
-
-            // Resuelvo el sistema de nuevo
-            cholesky(C, L);
-            Matriz LT = L;
-            LT.transponer();
-
-            resolverSistemaParaAdelante(L, b, y);
-            resolverSistemaParaAtras(LT, y, r);
-            //
+            r[equipo] = w[equipo] /  (float)((w[equipo] + l[equipo]));
+            r[ganador] = w[ganador] /  (float)((w[ganador] + l[ganador]));
 
             ganador = maximo(r);
-            
+          
           }
+
           std::cout << "cantidad de partidos: " << cantidadDePartidos << std::endl;
           vector<int> equipos(cantEquipos);
 
@@ -278,8 +214,71 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
             fileWrite << " | ganados: " << std::fixed << w[equipos[j]]; 
             fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
           }
+
+      } else { //metodo 3
+
+            srand(1);
+            for (int i = 0 ; i < cantEquipos ; ++i) {
+              C[i][i] = 2.0 + w[i] + l[i];
+              b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
+            }
+
+            cholesky(C, L);
+            Matriz LT = L;
+            LT.transponer();
+
+            resolverSistemaParaAdelante(L, b, y);
+            resolverSistemaParaAtras(LT, y, r);
+
+            int cantidadDePartidos = 0;
+            int equipoRand;
+            int ganador = maximo(r);
+            while (ganador != equipo) {
+              //std::cout << "ganador: " << ganador << " ranking " << r[ganador] << " ganadas: " << w[ganador] << " perdidas: " << l[ganador] << std::endl;
+              //std::cout << "equipo: " << equipo << " ranking " << r[equipo] << " ganadas: " << w[equipo] << " perdidas: " << l[equipo]<< std::endl;
+              equipoRand = rand() % cantEquipos;
+              cantidadDePartidos++;
+
+              C[equipoRand][equipo]--;
+              C[equipo][equipoRand]--; // Los hago jugar una vez más
+              w[equipo]++; // El equipo que quiero llevar arriba gano
+              l[equipoRand]++; // El mejor perdio
+              C[equipo][equipo]++;
+              C[equipoRand][equipoRand]++; // Ambos jugaron un partido más
+
+              b[equipo] = 1.0 + (w[equipo] - l[equipo]) / 2.0;
+              b[equipoRand] = 1.0 + (w[equipoRand] - l[equipoRand]) / 2.0; //Actualizo vector resultado
+
+              // Resuelvo el sistema de nuevo
+              cholesky(C, L);
+              Matriz LT = L;
+              LT.transponer();
+
+              resolverSistemaParaAdelante(L, b, y);
+              resolverSistemaParaAtras(LT, y, r);
+              //
+
+              ganador = maximo(r);
+              
+            }
+            std::cout << "cantidad de partidos: " << cantidadDePartidos << std::endl;
+            vector<int> equipos(cantEquipos);
+
+            for (int i = 0; i < cantEquipos; ++i)
+              equipos[i] = i;
+
+            sort(r, equipos);
+
+            for (int j = 0 ; j < cantEquipos ; ++j) {
+              if (equipos[j] >= 10) {
+                fileWrite << "equipo: " << equipos[j] << " | ranking: " << std::fixed << r[j]; 
+              } else {
+                fileWrite << "equipo: " << equipos[j] << "  | ranking: " << std::fixed << r[j]; 
+              }
+              fileWrite << " | ganados: " << std::fixed << w[equipos[j]]; 
+              fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
+            }
         }
-      
       }
     }
 
