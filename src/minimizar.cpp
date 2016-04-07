@@ -177,27 +177,27 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
     } else {
         if (method == 2) {
           for (int i = 0 ; i < cantEquipos ; ++i) {
-            r[i] = w[i] + (float)((w[i] + l[i]));
+            r[i] = w[i] / (float)((w[i] + l[i]));
           }
 
-          //int cantidadDePartidos = 0;
-          //int ganador = maximo(r);
+          int cantidadDePartidos = 0;
+          int ganador = maximo(r);
 
-          //while (ganador != equipo) {
-          //  cantidadDePartidos++;
-          //  //std::cout << "ganador: " << ganador << " ranking " << r[ganador] << " ganadas: " << w[ganador] << " perdidas: " << l[ganador] << std::endl;
-          //  //std::cout << "equipo: " << equipo << " ranking " << r[equipo] << " ganadas: " << w[equipo] << " perdidas: " << l[equipo]<< std::endl;
-          //  w[equipo]++;
-          //  l[ganador]++;
+          while (ganador != equipo) {
+            cantidadDePartidos++;
+            //std::cout << "ganador: " << ganador << " ranking " << r[ganador] << " ganadas: " << w[ganador] << " perdidas: " << l[ganador] << std::endl;
+            //std::cout << "equipo: " << equipo << " ranking " << r[equipo] << " ganadas: " << w[equipo] << " perdidas: " << l[equipo]<< std::endl;
+            w[equipo]++;
+            l[ganador]++;
 
-          //  r[equipo] = 1.0 + (w[equipo] - l[equipo]) / 2.0; 
-          //  r[ganador] = 1.0 + (w[ganador] - l[ganador]) / 2.0; 
+            r[equipo] = w[equipo] /  (float)((w[equipo] + l[equipo]));
+            r[ganador] = w[ganador] /  (float)((w[ganador] + l[ganador]));
 
-          //  ganador = maximo(r);
-          //
-          //}
+            ganador = maximo(r);
+          
+          }
 
-          //std::cout << "cantidad de partidos: " << cantidadDePartidos << std::endl;
+          std::cout << "cantidad de partidos: " << cantidadDePartidos << std::endl;
           vector<int> equipos(cantEquipos);
 
           for (int i = 0; i < cantEquipos; ++i)
@@ -214,8 +214,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
             fileWrite << " | ganados: " << std::fixed << w[equipos[j]]; 
             fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
           }
-        }
-      
+
       } else {
           for (int i = 0 ; i < cantEquipos ; ++i) {
             C[i][i] = 2.0 + w[i] + l[i];
@@ -276,6 +275,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
             fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
           }
       
+      }
       }
     }
 
