@@ -206,8 +206,8 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
       }
       case 2: {
         for (int i = 0 ; i < cantEquipos ; ++i) {
-          b[i] = w[i] / (w[i] + l[i]); 
-          fileWrite << std::fixed << b[i] << std::endl;
+          r[i] = (float)(w[i] / (float)((w[i] + l[i]))); 
+          fileWrite << std::fixed << r[i] << std::endl;
         }
        
         break;
