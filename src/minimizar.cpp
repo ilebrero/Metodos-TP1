@@ -214,9 +214,10 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
             fileWrite << " | ganados: " << std::fixed << w[equipos[j]]; 
             fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
           }
-        }
       
       } else {
+
+          srand(1);
           for (int i = 0 ; i < cantEquipos ; ++i) {
             C[i][i] = 2.0 + w[i] + l[i];
             b[i] = 1.0 + (w[i] - l[i]) / 2.0; 
@@ -230,21 +231,23 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
           resolverSistemaParaAtras(LT, y, r);
 
           int cantidadDePartidos = 0;
+          int equipoRand;
           int ganador = maximo(r);
           while (ganador != equipo) {
             //std::cout << "ganador: " << ganador << " ranking " << r[ganador] << " ganadas: " << w[ganador] << " perdidas: " << l[ganador] << std::endl;
             //std::cout << "equipo: " << equipo << " ranking " << r[equipo] << " ganadas: " << w[equipo] << " perdidas: " << l[equipo]<< std::endl;
+            equipoRand = rand() % cantEquipos;
             cantidadDePartidos++;
 
-            C[ganador][equipo]--;
-            C[equipo][ganador]--; // Los hago jugar una vez más
+            C[equipoRand][equipo]--;
+            C[equipo][equipoRand]--; // Los hago jugar una vez más
             w[equipo]++; // El equipo que quiero llevar arriba gano
-            l[ganador]++; // El mejor perdio
+            l[equipoRand]++; // El mejor perdio
             C[equipo][equipo]++;
-            C[ganador][ganador]++; // Ambos jugaron un partido más
+            C[equipoRand][equipoRand]++; // Ambos jugaron un partido más
 
             b[equipo] = 1.0 + (w[equipo] - l[equipo]) / 2.0;
-            b[ganador] = 1.0 + (w[ganador] - l[ganador]) / 2.0; //Actualizo vector resultado
+            b[equipoRand] = 1.0 + (w[equipoRand] - l[equipoRand]) / 2.0; //Actualizo vector resultado
 
             // Resuelvo el sistema de nuevo
             cholesky(C, L);
@@ -275,6 +278,7 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
             fileWrite << " | ganados: " << std::fixed << w[equipos[j]]; 
             fileWrite << " | perdidos: " << std::fixed << l[equipos[j]] << std::endl; 
           }
+        }
       
       }
     }
