@@ -1,0 +1,227 @@
+
+Supongo que los algoritmos ordenan de menor a mayor. 
+
+\begin{itemize}
+  \item \textsc{Selection sort}: El algoritmo selecciona en cada paso el mínimo de la lista y lo posiciona 
+  en la primer ubicación no ordenada. Es independiente de la entrada por lo cual será $O(n^2)$.
+  \item \textsc{Insertion sort}: El mejor caso del algoritmo es cuando el arreglo ya está ordenado. Si el 
+  arreglo estaba ordenado de mayor a menor, en cada iteración el elemento en la posición i
+  deberá ser swapeado i veces  ya que será el nuevo mínimo del sub-arreglo ya ordenado. Por ende la complejidad
+  será $O(\sum\limits_{i=0}^{n}i)$ = $O(n^{2})$ donde n es el tamaño del arreglo.
+  \item \textsc{Heap sort}: DESPUES COMPLETAR.
+  \item \textsc{Quicksort}: El tiempo de ejecución del algoritmo depende de la elección del pivote en cada 
+  iteración. Por ende la complejidad en el peor caso será cuando la elección del pivote en cada iteración sea 
+  COMPLETAR LUEGO.
+  \item \textsc{Mergesort}: La ecuación de recurrencia del algoritmo es $T(n) = T(n/2) + O(n)$ por lo cual 
+  el algoritmo tendrá complejidad temporal $O(n log n)$ independientemente de la manera en la que esté el 
+  arreglo.  
+\end{itemize}
+
+----------------------
+
+Si Tam(s') >> Tam(s'') o Tam(s') ~ Tam(s'')
+Utilizaría el Insertion sort ya que al estar ordenado los primeros Tam(s') elementos ordenados las primeras 
+Tam(s') iteraciones costarán $O(1)$. La i-esima iteracion de un elemento en s'' costara Tam(s') + i
+por ende $O(\sum\limits_{i=0}^{Tam(s'')}Tam(s')+ i)$ = $O(Tam(s'')*Tam(s'))$ lo cual conviene si Tam(s') >> Tam(s'')
+
+Si Tam(s') << Tam(s'') usaría alguno de los algoritmos que tenga $O(n log n)$ complejidad temporal, donde 
+n = Tam(s'').
+
+-------------------------
+
+\algoritmo{MásChicos}{in/ A : arreglo, in/ k : nat}{res: arreglo(nat)}{
+  \State $\var{res} \larr CrearArreglo(k)$
+  \complejidad{O($k$)}
+  \State $\var{presentes} \larr CrearArreglo(tam(A))$
+  \complejidad{O($n$)}
+  \State $\var{max} \larr 1$
+  \complejidad{O(1)}
+
+  \For {$i = 2 to Tam(A)$}
+  \complejidad{O($n$)}
+    \If {$A[i] > A[max]$}
+    \complejidad{O(1)}
+      \State $max \larr i$
+    \EndIf
+  \EndFor
+
+  \For {$i = 1 to Tam(A)$}
+  \complejidad{O($n$)}
+    \State $presentes[i]$
+  \EndFor
+
+  \For {$i = 1 to k$}
+  \complejidad{O($n$)}
+    \State $\Var{min} \larr max$
+    \For {$j = 1 to Tam(A)$}
+      \If {$presentes[j] \wedge A[j] < A[min]$}
+      \complejidad{O(1)}
+        \State $min \larr j$
+        \complejidad{O(1)}
+      \EndIf
+    \EndFor
+    \State $presentes[min] \larr false$
+    \State $res[i] \larr A[min]$
+  \EndFor
+}{O($n+n+nk$)}
+
+Por ende el algoritmo tiene complejidad O($nk$) con n = Tam(A). Como la cota inferior para ordenar un arreglo
+es $\theta$(n log n), con lo cual el algoritmo tiene mejor complejidad cuando k es de orden menor que log n
+
+Presentes indica si ya incluimos un elemento entre la lista de los k mas chicos.
+
+--------------------------
+
+\algoritmo{MuchosMerge}{in/ S : conj(arreglo(nat)), in/ n : nat}{res: arreglo(nat)}{
+  \State $\var{res} \larr s_1$
+  \complejidad{O($1$)}
+
+  \For {$i = 2 to n$}
+  \complejidad{O($n$)}
+    \State $Merge(res, res, s_i)$
+    \complejidad{O($max\{Long(s_i), res\}$)}
+  \EndFor
+
+}{$O(n*max_{i}(s_i))$}
+
+Al finalizar $res$ contiene el resultado de hacer Merge entre todas las listas del conjunto. Como Merge devuelve un arreglo ordenado y contiene la unión de las 2 listas que recibe, res = $\cup\limits_{1=1}^{n}(s_i)$.
+
+--------------------------
+
+\algoritmo{PorFrecuencia}{in/out A : arreglo(nat)}{res: arreglo(nat)}{
+  \State $\var{dicc_{AVL}} d \leftarrow Vacío$
+  \State $\var{n} \leftarrow Tam(a)$
+  \complejidad{O($1$)}
+
+  \For {$i = 1 to n$}
+  \complejidad{O($n*log(n)$)}
+    \IF {$\neg$Definido?(d, A[i])}
+      \STATE $Definir(d, A[i], 1)$
+      \complejidad{O($log(n)$)}
+    \ELSE
+      \STATE $Definir(d, A[i], obtener(d, A[i])+1)$
+      \complejidad{O($log(n)$)}
+    \EndIF
+  \EndFor
+
+  \For {$i = 1 to n$}
+  \complejidad{O($n*log(n)$)}
+    \STATE $max \leftarrow DameMax(d)$
+    \complejidad{O($d$)}
+    \STATE $repeticiones \leftarrow obtener(d, max)$
+    \For {$i = 1 to repeticiones$}
+      \complejidad{O($repeteciones$)}
+      \STATE $A[i] = max$
+    \EndFor
+    \STATE $Borrar(d, max)$
+    \complejidad{O($n$)}
+  \EndFor
+
+
+}{$O(n*log(n))$}
+
+La idea del algoritmo es tener un diccionario AVL que determina la relación de órden a partir de su significado. La clave del diccionario Avl son los elementos del arreglo $A$ y el significado la cantidad 
+de repeticiones. Luego se tiene que ir sacando el máximo del Avl (el elemento con mayor cantidad de repeticiones del arreglo) y posicionarlo esa cantidad de veces en el arreglo original.
+
+-------------------
+
+\algoritmo{AvlSort}{in/out A : arreglo(nat)}{res: arreglo(nat)}{
+  \State $\var{dicc_{AVL}} d \leftarrow Vacío$
+  \State $\var{n} \leftarrow Tam(a)$
+  \complejidad{O($1$)}
+
+  \For {$i = 1 to n$}
+  \complejidad{O($n*log(n)$)}
+    \IF {$\neg$Definido?(d, A[i])}
+      \STATE $Definir(d, A[i], 1)$
+      \complejidad{O($log(n)$)}
+    \ELSE
+      \STATE $Definir(d, A[i], obtener(d, A[i])+1)$
+      \complejidad{O($log(n)$)}
+    \EndIF
+  \EndFor
+
+  \For {$i = 1 to n$}
+  \complejidad{O($n*log(n)$)}
+    \STATE $min \leftarrow DameMin(d)$
+    \complejidad{O($d$)}
+    \STATE $repeticiones \leftarrow obtener(d, min)$
+    \complejidad{O($d$)}
+    \For {$i = 1 to repeticiones$}
+      \complejidad{O($repeteciones$)}
+      \STATE $A[i] = max$
+    \EndFor
+    \STATE $Borrar(d, max)$
+    \complejidad{O($d$)}
+  \EndFor
+
+
+}{$O(n*log(n))$}
+
+La idea del algoritmo es tener un diccionario AVL que determina la relación de órden a partir de las claves. La clave del diccionario Avl son los elementos del arreglo $A$ y el significado la cantidad 
+de repeticiones. Luego se tiene que ir sacando el mínimo del Avl (el elemento más chico del arreglo) y posicionarlo esa cantidad de veces en el arreglo original.
+
+-------------------------
+
+\algoritmo{OrdenarPlanilla}{in/out A : arreglo(alumno)}{res: arreglo(alumno)}{
+  \State $\var{lista(alumno)} varones \leftarrow Vacía$
+  \complejidad{O($1$)}
+  \State $\var{lista(alumno)} mujeres \leftarrow Vacía$
+  \complejidad{O($1$)}
+  \State $\var{n} \leftarrow Tam(a)$
+  \complejidad{O($1$)}
+
+  \For {$i = 1 to n$}
+  \complejidad{O($n$)}
+    \IF {A[i].sexo = masc}
+      \STATE $AgregarAtras(varones, A[i])$
+      \complejidad{O(1)}
+    \ELSE
+      \STATE $AgregarAtras(mujeres, A[i])$
+      \complejidad{O(1)}
+    \EndIF
+  \EndFor
+
+  \STATE $BucketSort(varones)$
+  \complejidad{O($n$)}
+  \STATE $BucketSort(mujeres)$
+  \complejidad{O($n$)}
+
+  \STATE $Concatenar(mujeres, varones)$
+
+}{$O(n)$}
+
+2) En un primer paso se divide la lista inicial en dos, donde cada una contiene un único género. Esto mantiene el orden relativo.
+Luego, cuando se realiza el BucketSort, al ser un ordenamiento estable, se puede garantizar que el orden relativo entre dos elementos iguales (por su relación de orden) se mantiene.
+
+3) No, es todo una mentira.
+
+---------------------------
+
+\algoritmo{MuchosCasiSort}{in/out A : arreglo(nat)}{res: arreglo(nat)}{
+  \State $\var{nat} i \leftarrow 1$
+  \complejidad{O($1$)}
+  \State $\var{nat} i \leftarrow 0$
+  \complejidad{O($1$)}
+  \State $\var{n} \leftarrow Tam(a)$
+  \complejidad{O($1$)}
+
+  \While {$j < log_{2}(n)$}
+  \complejidad{O($n*log(n)$)}
+    \STATE $CasiSort(subArreglo(A, i, n))$
+    \complejidad{O($n$)}
+    \STATE $j \leftarrow j + 1$
+    \complejidad{O(1)}
+    \STATE $i \leftarrow i + (n/2^{j})$
+    \complejidad{O(1)}
+  \EndWhile
+
+  \While {$j > 0$}
+  \complejidad{O($n*log(n)$)}
+    \STATE $i \leftarrow i - (n/2^{j})$
+    \complejidad{O(1)}
+    \STATE $Merge(subArreglo(A, i, n), subArreglo(A, i, (i+n)/2), subArreglo(A, (i+n)/2, n))$
+    \complejidad{O($n$)}
+  \EndWhile
+
+}{$O(n)$}
