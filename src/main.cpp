@@ -168,43 +168,46 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
         break;
       }
       case 1: {
-        int cantResultados = 500;
-        while (cantResultados <= 10000) {
-
-          for (int k = 0; k < 5; ++k) {
+//        int cantResultados = 500;
+//        while (cantResultados <= 10000) {
+//
+//          for (int k = 0; k < 5; ++k) {
             init_time();
 
             cholesky(C, L);
             Matriz LT = L;
             LT.transponer();
 
-            acum += get_time();
+//            acum += get_time();
+//
+//            for (int j = 0; j < cantResultados; ++j) {
+//              vector<float> b2(b); // Vector del sistema Cr = b
+//
+//              init_time();
 
-            for (int j = 0; j < cantResultados; ++j) {
-              vector<float> b2(b); // Vector del sistema Cr = b
-
-              init_time();
-
-              resolverSistemaParaAdelante(L, b2, y);
+            LT.mostrar();
+            std::cout << "-------------------------------" << std::endl;
+            L.mostrar();
+              resolverSistemaParaAdelante(L, b, y);
               resolverSistemaParaAtras(LT, y, r);
 
-              acum += get_time();
-
-            }
-          }
-          acum /= 5;
-          fileWrite << std::fixed << acum << std::endl;
-          acum = 0;
-          std::cout << cantResultados << std::endl;
-          cantResultados += 500;
-        }
+//              acum += get_time();
+//
+//            }
+//          }
+//          acum /= 5;
+//          fileWrite << std::fixed << acum << std::endl;
+//          acum = 0;
+//          std::cout << cantResultados << std::endl;
+//          cantResultados += 500;
+//        }
 
         break;
       }
       case 2: {
         for (int i = 0 ; i < cantEquipos ; ++i) {
-          b[i] = w[i] / (w[i] + l[i]); 
-          fileWrite << std::fixed << b[i] << std::endl;
+          r[i] = (float)(w[i] / (float)((w[i] + l[i]))); 
+          fileWrite << std::fixed << r[i] << std::endl;
         }
        
         break;
@@ -238,26 +241,28 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
       case 4: {
         MatrizSimetrica L(cantEquipos, cantEquipos);
 
-        //for (int k = 0; k < 3; ++k) {
+        for (int k = 0; k < 3; ++k) {
 
           init_time();
           choleskySimetrico(C, L);
           MatrizSimetrica LT = L;
+          L.setTriangular(true);
+          LT.setTriangular(true);
           LT.transponer();
 
-          LT.mostrar();
-          std::cout << "-------------" << std::endl;
-          L.mostrar();
+          //LT.mostrar();
+          //std::cout << "-------------" << std::endl;
+          //L.mostrar();
 
           resolverSistemaParaAdelanteSim(L, b, y);
           resolverSistemaParaAtrasSim(LT, y, r);
 
           acum += get_time();
 
-        //}
-        //acum /= 3;
-        //fileWrite << std::fixed << acum << std::endl; 
-        //acum = 0;
+        }
+        acum /= 3;
+        fileWrite << std::fixed << acum << std::endl; 
+        acum = 0;
 
         break;
           }
@@ -268,9 +273,9 @@ int evaluarTests(std::string fileTestData, std::string fileTestResult, int metho
 
     }
 
-    for (int i = 0 ; i < cantEquipos ; ++i) {
-      fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
-    }
+    //for (int i = 0 ; i < cantEquipos ; ++i) {
+    //  fileWrite << "equipo: " << i << " ranking: " << std::fixed << r[i] << std::endl; 
+    //}
     ++z;
     std::cout << z << std::endl;
 
